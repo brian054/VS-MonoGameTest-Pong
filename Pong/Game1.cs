@@ -10,6 +10,9 @@ namespace Pong
         Vector2 ballPos;
         float ballSpeed;
 
+        Vector2 PaddleXPos;
+        float paddleSpeed;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -28,6 +31,9 @@ namespace Pong
             ballPos = new Vector2(_graphics.PreferredBackBufferWidth / 2,
                 _graphics.PreferredBackBufferHeight / 2);
             ballSpeed = 100f;
+
+            PaddleXPos = new Vector2(50,
+                200);
 
             base.Initialize();
         }
@@ -93,13 +99,16 @@ namespace Pong
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
             _spriteBatch.Draw(ballTexture, ballPos, 
                 null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2),
-                Vector2.One, SpriteEffects.None, 0f);
+                Vector2.One * 3, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(ballTexture, new Vector2(10, 200),
+                null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2),
+                Vector2.One * 3, SpriteEffects.None, 0f);
             _spriteBatch.End();
 
             base.Draw(gameTime);
