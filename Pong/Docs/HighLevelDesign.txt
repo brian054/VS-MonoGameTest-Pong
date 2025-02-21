@@ -1,0 +1,49 @@
+﻿PlayerPaddle class
+-------------------------------
+Rectangle 
+- x, y, width, height
+
+UpdatePaddle()
+DrawPaddle()
+
+EnemyPaddle class
+--------------------------------
+I would extract to a Paddle class but avoid overengineering for this small game
+
+Game class will handle setting all the stuff up, calling the update/draw methods from each class, etc.
+
+
+Game States:
+0 = Menu State
+- three buttons, those screens be local to the Menu system, abstract
+1 = Playing State
+- includes a Paused state, with some buttons
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
