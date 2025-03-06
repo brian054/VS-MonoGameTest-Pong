@@ -40,6 +40,8 @@ namespace Pong
                 _graphics.PreferredBackBufferHeight / 2);
             ballSpeed = 100f;
 
+            this.IsFixedTimeStep = true;
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0); // 60 updates per second
             base.Initialize();
         }
 
@@ -55,50 +57,40 @@ namespace Pong
             ballTexture = Content.Load<Texture2D>("ball");
         }
 
-        // check collisions, gather input, play audio, etc.
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
             var keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.Up))
-            {
-                ballPos.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (keyState.IsKeyDown(Keys.Up)) {
+                ballPos.Y -= ballSpeed * (float) gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (keyState.IsKeyDown(Keys.Down))
-            {
-                ballPos.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (keyState.IsKeyDown(Keys.Down)) {
+                ballPos.Y += ballSpeed * (float) gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (keyState.IsKeyDown(Keys.Left))
-            {
-                ballPos.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (keyState.IsKeyDown(Keys.Left)) {
+                ballPos.X -= ballSpeed * (float) gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (keyState.IsKeyDown(Keys.Right))
-            {
-                ballPos.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (keyState.IsKeyDown(Keys.Right)) {
+                ballPos.X += ballSpeed * (float) gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (ballPos.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2)
-            {
+            if (ballPos.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2) {
                 ballPos.X = _graphics.PreferredBackBufferWidth - ballTexture.Width / 2;
             }
-            else if (ballPos.X < ballTexture.Width / 2)
-            {
+            else if (ballPos.X < ballTexture.Width / 2) {
                 ballPos.X = ballTexture.Width / 2;
             }
 
-            if (ballPos.Y > _graphics.PreferredBackBufferHeight - ballTexture.Height / 2)
-            {
+            if (ballPos.Y > _graphics.PreferredBackBufferHeight - ballTexture.Height / 2) {
                 ballPos.Y = _graphics.PreferredBackBufferHeight - ballTexture.Height / 2;
             }
-            else if (ballPos.Y < ballTexture.Height / 2)
-            {
+            else if (ballPos.Y < ballTexture.Height / 2) {
                 ballPos.Y = ballTexture.Height / 2;
             }
 
@@ -109,9 +101,8 @@ namespace Pong
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            _spriteBatch.Draw(ballTexture, ballPos, 
+            _spriteBatch.Draw(ballTexture, ballPos,
                 null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2),
                 Vector2.One, SpriteEffects.None, 0f);
             _spriteBatch.End();
