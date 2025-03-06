@@ -1,21 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Pong
 {
     public class Game1 : Game
     {
         Texture2D ballTexture;
-        Vector2 ballPos;
+        Vector2 ballPos; 
         float ballSpeed;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        public Texture2D _dummyTexture;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = 1280;  
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -25,6 +31,11 @@ namespace Pong
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Window.AllowUserResizing = false;
+
+            this.IsFixedTimeStep = true;
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0); // 60 updates per second
+
             ballPos = new Vector2(_graphics.PreferredBackBufferWidth / 2,
                 _graphics.PreferredBackBufferHeight / 2);
             ballSpeed = 100f;
@@ -38,6 +49,9 @@ namespace Pong
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            _dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
+            _dummyTexture.SetData(new[] { Color.White });
+
             ballTexture = Content.Load<Texture2D>("ball");
         }
 
