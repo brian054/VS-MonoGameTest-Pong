@@ -17,6 +17,7 @@ namespace Pong
         public Texture2D _dummyTexture;
 
         Paddle playerPaddleTest;
+        Paddle villain;
 
         public Game1()
         {
@@ -59,6 +60,7 @@ namespace Pong
 
             ballTexture = Content.Load<Texture2D>("ball");
             playerPaddleTest = new Paddle(new Rectangle(100, 100, 60, 100), _dummyTexture);
+            villain = new Paddle(new Rectangle(700, 500, 60, 100), _dummyTexture);
         }
 
         protected override void Update(GameTime gameTime)
@@ -115,6 +117,7 @@ namespace Pong
                 null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2),
                 Vector2.One, SpriteEffects.None, 0f);
             playerPaddleTest.Draw(_spriteBatch);
+            villain.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
