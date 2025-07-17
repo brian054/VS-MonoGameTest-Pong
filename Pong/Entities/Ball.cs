@@ -6,26 +6,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pong {
-    internal class Ball {
+namespace Pong.Entities
+{
+    public class Ball : Entity
+    {
 
         private Vector2 ballPos;
         private Rectangle ballRect; // a mf square
         private int ballSpeed = 100; // pixels per second
         private Texture2D dummyTexture;
 
-        public Ball(Rectangle rect, Texture2D dummyTexture) {
-            this.ballRect = rect;
-            this.ballPos = new Vector2(rect.X, rect.Y);
+        public Ball(Rectangle rect, Texture2D dummyTexture)
+        {
+            ballRect = rect;
+            ballPos = new Vector2(rect.X, rect.Y);
             this.dummyTexture = dummyTexture;
         }
 
-        public void Update() {
-
+        public override void Update(GameTime gameTime)
+        {
+        
         }
-        public void Draw(SpriteBatch spriteBatch) {
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
             spriteBatch.Draw(dummyTexture, ballRect, Color.Red);
         }
-
     }
 }

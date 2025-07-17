@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pong
+namespace Pong.Helpers
 {
     public static class Globals
     {
-        public const int PreferredBackBufferWidth = 1280;  
+        public const int PreferredBackBufferWidth = 1280;
         public const int PreferredBackBufferHeight = 720;
 
     }

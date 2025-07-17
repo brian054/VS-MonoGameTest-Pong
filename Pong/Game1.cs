@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Pong.Entities;
+using Pong.Helpers;
 using System;
 using System.Diagnostics;
 
@@ -68,42 +70,42 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var keyState = Keyboard.GetState();
+            //var keyState = Keyboard.GetState();
 
-            playerPaddleTest.Update(gameTime, keyState);
-            if (keyState.IsKeyDown(Keys.W))
-            {
-                ballPos.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
+            //playerPaddleTest.Update(gameTime, keyState);
+            //if (keyState.IsKeyDown(Keys.W))
+            //{
+            //    ballPos.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //}
 
-            if (keyState.IsKeyDown(Keys.S))
-            {
-                ballPos.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
+            //if (keyState.IsKeyDown(Keys.S))
+            //{
+            //    ballPos.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //}
 
-            if (keyState.IsKeyDown(Keys.A))
-            {
-                ballPos.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
+            //if (keyState.IsKeyDown(Keys.A))
+            //{
+            //    ballPos.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //}
 
-            if (keyState.IsKeyDown(Keys.D))
-            {
-                ballPos.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
+            //if (keyState.IsKeyDown(Keys.D))
+            //{
+            //    ballPos.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //}
 
-            if (ballPos.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2) {
-                ballPos.X = _graphics.PreferredBackBufferWidth - ballTexture.Width / 2;
-            }
-            else if (ballPos.X < ballTexture.Width / 2) {
-                ballPos.X = ballTexture.Width / 2;
-            }
+            //if (ballPos.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2) {
+            //    ballPos.X = _graphics.PreferredBackBufferWidth - ballTexture.Width / 2;
+            //}
+            //else if (ballPos.X < ballTexture.Width / 2) {
+            //    ballPos.X = ballTexture.Width / 2;
+            //}
 
-            if (ballPos.Y > _graphics.PreferredBackBufferHeight - ballTexture.Height / 2) {
-                ballPos.Y = _graphics.PreferredBackBufferHeight - ballTexture.Height / 2;
-            }
-            else if (ballPos.Y < ballTexture.Height / 2) {
-                ballPos.Y = ballTexture.Height / 2;
-            }
+            //if (ballPos.Y > _graphics.PreferredBackBufferHeight - ballTexture.Height / 2) {
+            //    ballPos.Y = _graphics.PreferredBackBufferHeight - ballTexture.Height / 2;
+            //}
+            //else if (ballPos.Y < ballTexture.Height / 2) {
+            //    ballPos.Y = ballTexture.Height / 2;
+            //}
 
             base.Update(gameTime);
         }

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pong {
-    internal class KeyboardManager {
+namespace Pong.Managers
+{
+    internal class StateManager
+    {
     }
 }
