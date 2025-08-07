@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pong.Entities;
-using Pong.Helpers;
+using Pong.Shared;
 using System;
 using System.Diagnostics;
 
@@ -20,6 +20,8 @@ namespace Pong
 
         Paddle playerPaddleTest;
         Paddle villain;
+
+        Ball theBall; 
 
         public Game1()
         {
@@ -60,9 +62,13 @@ namespace Pong
             _dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
             _dummyTexture.SetData(new[] { Color.White });
 
-            ballTexture = Content.Load<Texture2D>("ball");
-            playerPaddleTest = new Paddle(new Rectangle(100, 100, 60, 100), _dummyTexture);
-            villain = new Paddle(new Rectangle(700, 500, 60, 100), _dummyTexture);
+            // ballTexture = Content.Load<Texture2D>("ball");
+            //ballTexture = Helpers.CreateCircleTexture(GraphicsDevice, 10);
+
+            // _graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2
+            theBall = new Ball(new Vector2(150, 100), GraphicsDevice, 40); // new Rectangle(150, 100, 40, 40)
+            playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), _dummyTexture);
+            villain = new Paddle(new Rectangle(920, 300, 20, 100), _dummyTexture);
         }
 
         protected override void Update(GameTime gameTime)
@@ -70,42 +76,11 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //var keyState = Keyboard.GetState();
+            playerPaddleTest.Update(gameTime);
+            theBall.Update(gameTime);
 
-            //playerPaddleTest.Update(gameTime, keyState);
-            //if (keyState.IsKeyDown(Keys.W))
-            //{
-            //    ballPos.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //}
-
-            //if (keyState.IsKeyDown(Keys.S))
-            //{
-            //    ballPos.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //}
-
-            //if (keyState.IsKeyDown(Keys.A))
-            //{
-            //    ballPos.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //}
-
-            //if (keyState.IsKeyDown(Keys.D))
-            //{
-            //    ballPos.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //}
-
-            //if (ballPos.X > _graphics.PreferredBackBufferWidth - ballTexture.Width / 2) {
-            //    ballPos.X = _graphics.PreferredBackBufferWidth - ballTexture.Width / 2;
-            //}
-            //else if (ballPos.X < ballTexture.Width / 2) {
-            //    ballPos.X = ballTexture.Width / 2;
-            //}
-
-            //if (ballPos.Y > _graphics.PreferredBackBufferHeight - ballTexture.Height / 2) {
-            //    ballPos.Y = _graphics.PreferredBackBufferHeight - ballTexture.Height / 2;
-            //}
-            //else if (ballPos.Y < ballTexture.Height / 2) {
-            //    ballPos.Y = ballTexture.Height / 2;
-            //}
+            // check paddle and ball collision
+            //Console.WriteLine(Helpers.IsCircleRectColliding(theBall.ballPos + new Vector2(theBall.radius, theBall.radius), theBall.radius, playerPaddleTest.paddleRect));
 
             base.Update(gameTime);
         }
@@ -115,9 +90,7 @@ namespace Pong
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            _spriteBatch.Draw(ballTexture, ballPos,
-                null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2),
-                Vector2.One, SpriteEffects.None, 0f);
+            theBall.Draw(_spriteBatch);
             playerPaddleTest.Draw(_spriteBatch);
             villain.Draw(_spriteBatch);
             _spriteBatch.End();

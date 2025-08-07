@@ -10,16 +10,18 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Pong.Helpers;
+using Pong.Shared;
 
 namespace Pong.Entities
 {
     public class Paddle: Entity
     {
 
-        private Vector2 paddlePos;
+        public Vector2 paddlePos;
         private Rectangle paddleRect;
-        private int paddleSpeed = 100; // pixels per second
+        private int paddleSpeed = 500; // pixels per second
+
+        // private Vector2 paddleSize; 
         private Texture2D dummyTexture;
 
         private int windowHeight = Globals.PreferredBackBufferHeight;
@@ -33,25 +35,27 @@ namespace Pong.Entities
 
         public override void Update(GameTime gameTime)/*GameTime gameTime, KeyboardState keyState)*/
         {
-            //if (keyState.IsKeyDown(Keys.W))
-            //{
-            //    paddlePos.Y -= paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //    Debug.WriteLine(paddlePos.Y);
-            //}
+            // Movement
+            var keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.W))
+            {
+               paddlePos.Y -= paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
-            //if (keyState.IsKeyDown(Keys.S))
-            //{
-            //    paddlePos.Y += paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //}
+            if (keyState.IsKeyDown(Keys.S))
+            {
+               paddlePos.Y += paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
-            //if (paddlePos.Y > windowHeight - paddleRect.Height / 2)
-            //{
-            //    paddlePos.Y = windowHeight - paddleRect.Height / 2;
-            //}
-            //else if (paddlePos.Y < paddleRect.Height / 2)
-            //{
-            //    paddlePos.Y = paddleRect.Height / 2;
-            //}
+            // Bounds
+            if (paddlePos.Y > windowHeight - paddleRect.Height)
+            {
+                paddlePos.Y = windowHeight - paddleRect.Height;
+            }
+            else if (paddlePos.Y < 0)
+            {
+                paddlePos.Y = 0;
+            }
         }
         public override void Draw(SpriteBatch spriteBatch)
         {

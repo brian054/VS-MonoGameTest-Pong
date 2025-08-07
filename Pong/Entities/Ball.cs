@@ -5,32 +5,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Pong.Shared;
 
 namespace Pong.Entities
 {
     public class Ball : Entity
     {
 
-        private Vector2 ballPos;
-        private Rectangle ballRect; // a mf square
-        private int ballSpeed = 100; // pixels per second
-        private Texture2D dummyTexture;
+        public Vector2 ballPos { get; private set; }
 
-        public Ball(Rectangle rect, Texture2D dummyTexture)
+        public int radius { get; private set; }
+        private Rectangle ballRect; // a mf square
+        private int ballSpeed = 20; // pixels per second
+        private Texture2D ballTexture;
+
+        public Ball(Vector2 initialBallPos, GraphicsDevice gd, int radius)
         {
-            ballRect = rect;
-            ballPos = new Vector2(rect.X, rect.Y);
-            this.dummyTexture = dummyTexture;
+            this.ballPos = initialBallPos;
+            this.radius = radius;
+            this.ballTexture = Helpers.CreateCircleTexture(gd, 10);
         }
 
         public override void Update(GameTime gameTime)
         {
-        
+            ballPos = new Vector2(ballPos.X - ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds, ballPos.Y);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(dummyTexture, ballRect, Color.Red);
+            spriteBatch.Draw(ballTexture, ballPos, Color.White);
         }
     }
 }
