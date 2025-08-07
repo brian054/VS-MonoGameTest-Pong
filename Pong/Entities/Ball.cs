@@ -16,7 +16,7 @@ namespace Pong.Entities
 
         public int radius { get; private set; }
         private Rectangle ballRect; // a mf square
-        private int ballSpeed = 20; // pixels per second
+        private int ballSpeed = 250; // pixels per second
         private Texture2D ballTexture;
 
         public Ball(Vector2 initialBallPos, GraphicsDevice gd, int radius)
@@ -28,7 +28,7 @@ namespace Pong.Entities
 
         public override void Update(GameTime gameTime)
         {
-            ballPos = new Vector2(ballPos.X - ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds, ballPos.Y);
+            ballPos = new Vector2(ballPos.X + ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds, ballPos.Y);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
