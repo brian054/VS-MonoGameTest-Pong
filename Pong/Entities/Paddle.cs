@@ -14,11 +14,12 @@ using Pong.Shared;
 
 namespace Pong.Entities
 {
-    public class Paddle: Entity
+    public class Paddle : Entity
     {
 
         public Vector2 paddlePos;
-        private Rectangle paddleRect;
+        public int paddleWidth;
+        public int paddleHeight;
         private int paddleSpeed = 500; // pixels per second
 
         // private Vector2 paddleSize; 
@@ -26,9 +27,18 @@ namespace Pong.Entities
 
         private int windowHeight = Globals.PreferredBackBufferHeight;
 
+        public Rectangle paddleRect =>
+            new Rectangle(
+                (int)MathF.Round(paddlePos.X),
+                (int)MathF.Round(paddlePos.Y),
+                paddleWidth,
+                paddleHeight
+             );
+             
         public Paddle(Rectangle rect, Texture2D dummyTexture)
         {
-            paddleRect = rect;
+            paddleWidth = rect.Width;
+            paddleHeight = rect.Height;
             paddlePos = new Vector2(rect.X, rect.Y);
             this.dummyTexture = dummyTexture;
         }
@@ -39,12 +49,12 @@ namespace Pong.Entities
             var keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.W))
             {
-               paddlePos.Y -= paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                paddlePos.Y -= paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
             if (keyState.IsKeyDown(Keys.S))
             {
-               paddlePos.Y += paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                paddlePos.Y += paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
             // Bounds

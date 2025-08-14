@@ -80,7 +80,30 @@ namespace Pong
             theBall.Update(gameTime);
 
             // check paddle and ball collision
-            //Console.WriteLine(Helpers.IsCircleRectColliding(theBall.ballPos + new Vector2(theBall.radius, theBall.radius), theBall.radius, playerPaddleTest.paddleRect));
+            if (Helpers.IsCircleRectColliding(theBall.ballPos + new Vector2(theBall.radius, theBall.radius), theBall.radius, playerPaddleTest.paddleRect))
+            {
+                Console.WriteLine("They colliding!");
+                if (theBall.currDirection == Ball.Direction.Right)
+                {
+                    theBall.currDirection = Ball.Direction.Left;
+                }
+                else
+                {
+                    theBall.currDirection = Ball.Direction.Right;
+                }
+            }
+
+            // remember in the game it'll never bounce off the wall, so i dont think i should give a f about doing it from the center, paddle collision is the
+            // only thing that matters, so don't go rewriting all the stuff tomorrow.
+            if (theBall.ballPos.X > Globals.PreferredBackBufferWidth - (theBall.radius / 2)) // why tf does this work?
+            {
+                theBall.currDirection = Ball.Direction.Left;
+            }
+
+            if (theBall.ballPos.X < 0)
+            {
+                theBall.currDirection = Ball.Direction.Right;
+            }
 
             base.Update(gameTime);
         }
