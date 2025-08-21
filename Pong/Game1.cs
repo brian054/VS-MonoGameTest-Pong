@@ -91,6 +91,7 @@ namespace Pong
                 // {
                 //     theBall.currDirectionX = Ball.Direction.Right;
                 // }
+                theBall.ballVelocity = new Vector2(-theBall.ballVelocity.X, theBall.ballVelocity.Y);
             }
 
             // remember in the game it'll never bounce off the wall, so i dont think i should give a f about doing it from the center, paddle collision is the

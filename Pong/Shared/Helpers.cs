@@ -40,5 +40,10 @@ namespace Pong.Shared
 
             return (dx * dx + dy * dy) < (radius * radius);
         }
+
+        public static bool AABB_Collision()
+        {
+            return false;
+        }
     }
 }

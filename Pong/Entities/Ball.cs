@@ -7,6 +7,26 @@ using System.Text;
 using System.Threading.Tasks;
 using Pong.Shared;
 
+/*
+    Oof, so in the original pong game, the ball was a rectangle
+
+    Honestly.....switch this to be a rectangle instead of a circle
+
+    Collision becomes 10000x easier, just AABB, plus you'll get this done
+    way way faster with just using the rectangle.
+
+    This would be a great time to rename your var's in paddle and ball too
+
+    Brick breaker will literally just have a circle texture on top of a rectangle
+    and the rectangle can be used for collision.
+
+    Lesson Learned: Don't overengineer, focus on MVP.
+
+    Thoughts: I'm just glad I tried with the ball thing but this is just annoying af esp 
+    when I know I can just do AABB super quickly. 
+
+*/
+
 namespace Pong.Entities
 {
     public class Ball : Entity
