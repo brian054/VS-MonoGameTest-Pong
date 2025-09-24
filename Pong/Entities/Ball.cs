@@ -45,7 +45,7 @@ namespace Pong.Entities
             spriteBatch.Draw(Globals.dummyTexture, ballPos, ballRect, Color.White);
         }
 
-        // The Paddle is separated into 7 zones, tbh this shouldn't be in ball, should be in Paddle.
+        // The Paddle is separated into 7 zones, tbh this shouldn't be in ball, should be in Collision Manager.
         static readonly Vector2[] ZoneDirsRight = new Vector2[]
         {
             new Vector2(0.5f, -0.87f), // Zone 0: steep up-right

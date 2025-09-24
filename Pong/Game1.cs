@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pong.Entities;
+using Pong.Managers;
 using Pong.Shared;
 using System;
 using System.Diagnostics;
@@ -21,7 +22,9 @@ namespace Pong
         Paddle playerPaddleTest;
         Paddle villain;
 
-        Ball theBall; 
+        Ball theBall;
+
+        private CollisionManager collisionManager;
 
         public Game1()
         {
@@ -57,7 +60,9 @@ namespace Pong
 
             theBall = new Ball(new Rectangle(_graphics.PreferredBackBufferWidth / 2 - 20, _graphics.PreferredBackBufferHeight / 2 - 20, 20, 20));
             playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), _dummyTexture);
-            villain = new Paddle(new Rectangle(920, 300, 20, 100), _dummyTexture);
+            villain = new Paddle(new Rectangle(880, 300, 20, 100), _dummyTexture); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
+
+            collisionManager = new CollisionManager(); // what's the point if we do nothing in the constructor? just wondering
         }
 
         protected override void Update(GameTime gameTime)
@@ -72,22 +77,18 @@ namespace Pong
             theBall.ResolvePaddleCollision(playerPaddleTest.paddleRect);
             theBall.ResolvePaddleCollision(villain.paddleRect);
 
-            // check paddle and ball collision
-            //if (Helpers.AABB_Collision(theBall.ballRect, playerPaddleTest.paddleRect))
+            collisionManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall);
+
+            //// check ball and window collision - todo: move to CollisionManager
+            //if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.ballSize > Globals.PreferredBackBufferHeight)
+            //{
+            //    theBall.ballVelocity = new Vector2(theBall.ballVelocity.X, -theBall.ballVelocity.Y);
+            //}
+
+            //if (theBall.ballRect.X < 0 || theBall.ballRect.X + theBall.ballSize > Globals.PreferredBackBufferWidth)
             //{
             //    theBall.ballVelocity = new Vector2(-theBall.ballVelocity.X, theBall.ballVelocity.Y);
             //}
-
-            // check ball and window collision - todo: move to CollisionManager
-            if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.ballSize > Globals.PreferredBackBufferHeight)
-            {
-                theBall.ballVelocity = new Vector2(theBall.ballVelocity.X, -theBall.ballVelocity.Y);
-            }
-
-            if (theBall.ballRect.X < 0 || theBall.ballRect.X + theBall.ballSize > Globals.PreferredBackBufferWidth)
-            {
-                theBall.ballVelocity = new Vector2(-theBall.ballVelocity.X, theBall.ballVelocity.Y);
-            }
 
             base.Update(gameTime);
         }
