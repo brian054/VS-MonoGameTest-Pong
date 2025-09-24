@@ -35,7 +35,7 @@ namespace Pong.Entities
                 paddleHeight
              );
              
-        public Paddle(Rectangle rect, Texture2D dummyTexture)
+        public Paddle(Rectangle rect, Texture2D dummyTexture) // todo: remove dummytexture param
         {
             paddleWidth = rect.Width;
             paddleHeight = rect.Height;
@@ -69,7 +69,7 @@ namespace Pong.Entities
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(dummyTexture, paddlePos, paddleRect, Color.Red);
+            spriteBatch.Draw(Globals.dummyTexture, paddlePos, paddleRect, Color.Red);
         }
     }
 }
