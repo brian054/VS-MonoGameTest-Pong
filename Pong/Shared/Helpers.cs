@@ -41,13 +41,13 @@ namespace Pong.Shared
         //    return (dx * dx + dy * dy) < (radius * radius);
         //}
 
-        public static bool AABB_Collision(Rectangle r1, Rectangle r2)
-        {
-            if (r1.Intersects(r2))
-            {
-                return true;
-            }
-            return false;
-        }
+        //public static bool AABB_Collision(Rectangle r1, Rectangle r2)
+        //{
+        //    if (r1.Intersects(r2))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
     }
 }

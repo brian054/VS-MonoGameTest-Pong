@@ -66,21 +66,25 @@ namespace Pong
                 Exit();
 
             playerPaddleTest.Update(gameTime);
+            villain.Update(gameTime);
             theBall.Update(gameTime);
 
-            // check paddle and ball collision
-            if (Helpers.AABB_Collision(theBall.ballRect, playerPaddleTest.paddleRect))
-            {
-                theBall.ballVelocity = new Vector2(-theBall.ballVelocity.X, theBall.ballVelocity.Y);
-            }
+            theBall.ResolvePaddleCollision(playerPaddleTest.paddleRect);
+            theBall.ResolvePaddleCollision(villain.paddleRect);
 
-            // check ball and window collision
-            if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.ballSize > _graphics.PreferredBackBufferHeight)
+            // check paddle and ball collision
+            //if (Helpers.AABB_Collision(theBall.ballRect, playerPaddleTest.paddleRect))
+            //{
+            //    theBall.ballVelocity = new Vector2(-theBall.ballVelocity.X, theBall.ballVelocity.Y);
+            //}
+
+            // check ball and window collision - todo: move to CollisionManager
+            if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.ballSize > Globals.PreferredBackBufferHeight)
             {
                 theBall.ballVelocity = new Vector2(theBall.ballVelocity.X, -theBall.ballVelocity.Y);
             }
 
-            if (theBall.ballRect.X < 0 || theBall.ballRect.X + theBall.ballSize > _graphics.PreferredBackBufferWidth)
+            if (theBall.ballRect.X < 0 || theBall.ballRect.X + theBall.ballSize > Globals.PreferredBackBufferWidth)
             {
                 theBall.ballVelocity = new Vector2(-theBall.ballVelocity.X, theBall.ballVelocity.Y);
             }
