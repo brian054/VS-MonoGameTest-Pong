@@ -30,16 +30,16 @@ namespace Pong.Shared
             return texture;
         }
 
-        public static bool IsCircleRectColliding(Vector2 circleCenter, float radius, Rectangle rect)
-        {
-            float nearestX = MathHelper.Clamp(circleCenter.X, rect.Left, rect.Right);
-            float nearestY = MathHelper.Clamp(circleCenter.Y, rect.Top, rect.Bottom);
+        //public static bool IsCircleRectColliding(Vector2 circleCenter, float radius, Rectangle rect)
+        //{
+        //    float nearestX = MathHelper.Clamp(circleCenter.X, rect.Left, rect.Right);
+        //    float nearestY = MathHelper.Clamp(circleCenter.Y, rect.Top, rect.Bottom);
 
-            float dx = circleCenter.X - nearestX;
-            float dy = circleCenter.Y - nearestY;
+        //    float dx = circleCenter.X - nearestX;
+        //    float dy = circleCenter.Y - nearestY;
 
-            return (dx * dx + dy * dy) < (radius * radius);
-        }
+        //    return (dx * dx + dy * dy) < (radius * radius);
+        //}
 
         public static bool AABB_Collision()
         {

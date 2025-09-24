@@ -59,8 +59,11 @@ namespace Pong
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
-            _dummyTexture.SetData(new[] { Color.White });
+            //_dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
+            //_dummyTexture.SetData(new[] { Color.White });
+
+            Globals.dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
+            Globals.dummyTexture.SetData(new[] { Color.White });
 
             // ballTexture = Content.Load<Texture2D>("ball");
             //ballTexture = Helpers.CreateCircleTexture(GraphicsDevice, 10);
@@ -93,6 +96,9 @@ namespace Pong
                 // }
                 theBall.ballVelocity = new Vector2(-theBall.ballVelocity.X, theBall.ballVelocity.Y);
             }
+
+            // New collision
+
 
             // remember in the game it'll never bounce off the wall, so i dont think i should give a f about doing it from the center, paddle collision is the
             // only thing that matters, so don't go rewriting all the stuff tomorrow.

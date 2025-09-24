@@ -36,13 +36,14 @@ namespace Pong.Entities
         public int radius { get; private set; }
         private Rectangle ballRect; // a mf square
         private int ballSpeed = 400; // was 250, pixels per second
-        private Texture2D ballTexture;
+       // private Texture2D ballTexture;
 
         public Ball(Vector2 initialBallPos, GraphicsDevice gd, int radius)
         {
             this.ballPos = initialBallPos;
             this.radius = radius;
-            this.ballTexture = Helpers.CreateCircleTexture(gd, 10);
+            //this.ballTexture = Helpers.CreateCircleTexture(gd, 10);
+            
 
             float directionAngle = ballSpeed / MathF.Sqrt(2f);
             ballVelocity = new Vector2(directionAngle, -directionAngle);
@@ -55,7 +56,7 @@ namespace Pong.Entities
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(ballTexture, ballPos, Color.White);
+            spriteBatch.Draw(Globals.dummyTexture, ballPos, Color.White);
         }
     }
 }
