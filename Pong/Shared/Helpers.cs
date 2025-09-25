@@ -30,6 +30,8 @@ namespace Pong.Shared
             return texture;
         }
 
+        // Potentially could move all collisionManager methods into here
+
         //public static bool IsCircleRectColliding(Vector2 circleCenter, float radius, Rectangle rect)
         //{
         //    float nearestX = MathHelper.Clamp(circleCenter.X, rect.Left, rect.Right);

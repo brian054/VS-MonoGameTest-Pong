@@ -31,23 +31,26 @@ namespace Pong
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = Globals.PreferredBackBufferWidth;
             _graphics.PreferredBackBufferHeight = Globals.PreferredBackBufferHeight;
+            _graphics.SynchronizeWithVerticalRetrace = true;
             _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            Window.Title = "Pong";
+            Window.AllowUserResizing = false;
+
+            this.IsFixedTimeStep = true;
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0); // 60 updates per second
         }
 
         // Called after the constructor but before the main game loop (Update/Draw)
         // Query any required services and load any non-graphic related content
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            Window.AllowUserResizing = false;
-
-            this.IsFixedTimeStep = true;
-            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0); // 60 updates per second
-
             base.Initialize();
+
+            // game specific initializations
         }
 
         // Called once per game, within the Initialize method, before the main game loop starts
@@ -78,17 +81,6 @@ namespace Pong
             theBall.ResolvePaddleCollision(villain.paddleRect);
 
             collisionManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall);
-
-            //// check ball and window collision - todo: move to CollisionManager
-            //if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.ballSize > Globals.PreferredBackBufferHeight)
-            //{
-            //    theBall.ballVelocity = new Vector2(theBall.ballVelocity.X, -theBall.ballVelocity.Y);
-            //}
-
-            //if (theBall.ballRect.X < 0 || theBall.ballRect.X + theBall.ballSize > Globals.PreferredBackBufferWidth)
-            //{
-            //    theBall.ballVelocity = new Vector2(-theBall.ballVelocity.X, theBall.ballVelocity.Y);
-            //}
 
             base.Update(gameTime);
         }
