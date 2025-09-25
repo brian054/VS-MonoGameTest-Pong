@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Pong.Entities;
 using Pong.Managers;
 using Pong.Shared;
+using Pong.UI;
 using System;
 using System.Diagnostics;
 
@@ -23,6 +24,10 @@ namespace Pong
         Paddle villain;
 
         Ball theBall;
+
+       // SpriteFont ScoreBoardFont;
+        // Vector2 fontPos;
+        ScoreBoard theScoreBoard;
 
         private CollisionManager collisionManager;
 
@@ -60,10 +65,13 @@ namespace Pong
 
             Globals.dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
             Globals.dummyTexture.SetData(new[] { Color.White });
+            SpriteFont ScoreBoardFont = Content.Load<SpriteFont>("ScoreBoardFont");
 
             theBall = new Ball(new Rectangle(_graphics.PreferredBackBufferWidth / 2 - 20, _graphics.PreferredBackBufferHeight / 2 - 20, 20, 20));
             playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), _dummyTexture);
             villain = new Paddle(new Rectangle(880, 300, 20, 100), _dummyTexture); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
+
+            theScoreBoard = new ScoreBoard(ScoreBoardFont);
 
             collisionManager = new CollisionManager(); // what's the point if we do nothing in the constructor? just wondering
         }
@@ -77,10 +85,7 @@ namespace Pong
             villain.Update(gameTime);
             theBall.Update(gameTime);
 
-            theBall.ResolvePaddleCollision(playerPaddleTest.paddleRect);
-            theBall.ResolvePaddleCollision(villain.paddleRect);
-
-            collisionManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall);
+            collisionManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall, theScoreBoard);
 
             base.Update(gameTime);
         }
@@ -93,6 +98,13 @@ namespace Pong
             theBall.Draw(_spriteBatch);
             playerPaddleTest.Draw(_spriteBatch);
             villain.Draw(_spriteBatch);
+
+            //_spriteBatch.DrawString(ScoreBoardFont, "Test", fontPos, Color.White);
+
+            // Try scaling it:
+            //_spriteBatch.DrawString(ScoreBoardFont, "Test", fontPos - new Vector2(-100, 0), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
+            theScoreBoard.Draw(_spriteBatch);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);

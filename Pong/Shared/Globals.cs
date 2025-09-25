@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Pong.Shared
 {
@@ -9,6 +10,8 @@ namespace Pong.Shared
         public const int PreferredBackBufferHeight = 540;
 
         public static Texture2D dummyTexture;
+
+        public static readonly Random Random = new Random();
 
     }
 }
