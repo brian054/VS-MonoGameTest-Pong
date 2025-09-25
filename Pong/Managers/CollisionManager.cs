@@ -126,7 +126,7 @@ namespace Pong.Managers
         // where collisions are just included as an Event. 
         public void HandleScoreUpdate(Ball theBall, ScoreBoard scoreBoard)
         {
-            bool playerScored = theBall.ballRect.X + theBall.ballSize > Globals.PreferredBackBufferWidth; // pretty sure you can doo theBall.ballRect.Right instead of calculating the X plus ballSize
+            bool playerScored = theBall.ballRect.X + theBall.ballSize > Globals.PreferredBackBufferWidth; // pretty sure you can do theBall.ballRect.Right instead of calculating the X plus ballSize
             bool villainScored = theBall.ballRect.X < 0;
 
             // Update score if ball goes outside the boundary 
@@ -141,13 +141,6 @@ namespace Pong.Managers
                 }
 
                 theBall.Reset();
-
-                if (scoreBoard.playerScore > 2 || scoreBoard.villainScore > 2)
-                {
-                    // Game over
-                    Debug.WriteLine("Game over!");
-                    scoreBoard.ResetScore();
-                }
             }
         }
     }

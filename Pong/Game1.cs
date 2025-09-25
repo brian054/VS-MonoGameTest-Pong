@@ -2,11 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pong.Entities;
+using Pong.GameStates;
 using Pong.Managers;
 using Pong.Shared;
 using Pong.UI;
 using System;
 using System.Diagnostics;
+using System.Transactions;
 
 namespace Pong
 {
@@ -25,11 +27,14 @@ namespace Pong
 
         Ball theBall;
 
-       // SpriteFont ScoreBoardFont;
-        // Vector2 fontPos;
         ScoreBoard theScoreBoard;
+        SpriteFont ScoreBoardFont; // right now kinda treating as a default font
 
         private CollisionManager collisionManager;
+
+        MainMenuState mainMenu;
+
+        bool gameStart = false;
 
         public Game1()
         {
@@ -65,7 +70,9 @@ namespace Pong
 
             Globals.dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
             Globals.dummyTexture.SetData(new[] { Color.White });
-            SpriteFont ScoreBoardFont = Content.Load<SpriteFont>("ScoreBoardFont");
+            ScoreBoardFont = Content.Load<SpriteFont>("ScoreBoardFont");
+
+            mainMenu = new MainMenuState(ScoreBoardFont);
 
             theBall = new Ball(new Rectangle(_graphics.PreferredBackBufferWidth / 2 - 20, _graphics.PreferredBackBufferHeight / 2 - 20, 20, 20));
             playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), _dummyTexture);
@@ -81,12 +88,32 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            playerPaddleTest.Update(gameTime);
-            villain.Update(gameTime);
-            theBall.Update(gameTime);
+            if (gameStart)
+            {
+                playerPaddleTest.Update(gameTime);
+                villain.Update(gameTime);
+                theBall.Update(gameTime);
 
-            collisionManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall, theScoreBoard);
+                collisionManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall, theScoreBoard);
 
+                // Check if someone won the game
+                if (theScoreBoard.playerScore > 2 || theScoreBoard.villainScore > 2)
+                {
+                    // Game over
+                    Debug.WriteLine("Game over!");
+                    theScoreBoard.ResetScore();
+                    gameStart = false;
+                }
+            } 
+            else
+            {
+                mainMenu.Update();
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    gameStart = true;
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -95,15 +122,19 @@ namespace Pong
             GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin();
-            theBall.Draw(_spriteBatch);
-            playerPaddleTest.Draw(_spriteBatch);
-            villain.Draw(_spriteBatch);
 
-            //_spriteBatch.DrawString(ScoreBoardFont, "Test", fontPos, Color.White);
+            mainMenu.Draw(_spriteBatch);
 
-            // Try scaling it:
-            //_spriteBatch.DrawString(ScoreBoardFont, "Test", fontPos - new Vector2(-100, 0), Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
-            theScoreBoard.Draw(_spriteBatch);
+            //theBall.Draw(_spriteBatch);
+            //playerPaddleTest.Draw(_spriteBatch);
+            //villain.Draw(_spriteBatch);
+            //theScoreBoard.Draw(_spriteBatch);
+
+            //if (!gameStart)
+            //{
+            //    Vector2 promptPosition = new Vector2(Globals.PreferredBackBufferWidth / 2 - 300, 20);
+            //    _spriteBatch.DrawString(ScoreBoardFont, "Press 'spacebar' to start the game", promptPosition, Color.White);
+            //}
 
             _spriteBatch.End();
 
