@@ -70,15 +70,15 @@ namespace Pong
 
             Globals.dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
             Globals.dummyTexture.SetData(new[] { Color.White });
-            ScoreBoardFont = Content.Load<SpriteFont>("ScoreBoardFont");
+            Globals.DefaultFont = Content.Load<SpriteFont>("ScoreBoardFont");
 
-            mainMenu = new MainMenuState(ScoreBoardFont);
+            mainMenu = new MainMenuState();
 
             theBall = new Ball(new Rectangle(_graphics.PreferredBackBufferWidth / 2 - 20, _graphics.PreferredBackBufferHeight / 2 - 20, 20, 20));
             playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), _dummyTexture);
             villain = new Paddle(new Rectangle(880, 300, 20, 100), _dummyTexture); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
 
-            theScoreBoard = new ScoreBoard(ScoreBoardFont);
+            theScoreBoard = new ScoreBoard();
 
             collisionManager = new CollisionManager(); // what's the point if we do nothing in the constructor? just wondering
         }

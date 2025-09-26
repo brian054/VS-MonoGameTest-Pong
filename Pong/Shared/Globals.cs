@@ -13,5 +13,7 @@ namespace Pong.Shared
 
         public static readonly Random Random = new Random();
 
+        public static SpriteFont DefaultFont;
+
     }
 }
