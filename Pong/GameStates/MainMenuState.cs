@@ -23,7 +23,7 @@ namespace Pong.GameStates
         bool hoverOptions;
         bool hoverRect;
 
-        Button PlayButton;
+        public Button PlayButton { get; private set; }
         Button OptionsButton;
         Button ExitButton;
 

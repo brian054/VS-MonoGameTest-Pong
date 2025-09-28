@@ -27,7 +27,7 @@ namespace Pong.UI
         private int ButtonHeight;
 
         MouseState mouse;
-        bool hoverPlay;
+        public bool hoverPlay { get; private set; }
 
         private const float AspectRatio = 3f; // width : height
 

@@ -28,12 +28,14 @@ namespace Pong
         Ball theBall;
 
         ScoreBoard theScoreBoard;
-        SpriteFont ScoreBoardFont; // right now kinda treating as a default font
 
         private CollisionManager collisionManager;
 
         MainMenuState mainMenu;
 
+        MouseState currMouse;
+        MouseState prevMouse; // move out to state manager?
+        bool playButtonClicked = false;
         bool gameStart = false;
 
         public Game1()
@@ -88,6 +90,14 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            currMouse = Mouse.GetState();
+
+            // test click
+            if (mainMenu.PlayButton.hoverPlay && currMouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
+            {
+                playButtonClicked = true;
+            }
+
             if (gameStart)
             {
                 playerPaddleTest.Update(gameTime);
@@ -114,6 +124,9 @@ namespace Pong
                     gameStart = true;
                 }
             }
+
+            prevMouse = currMouse;
+
             base.Update(gameTime);
         }
 
@@ -123,18 +136,23 @@ namespace Pong
 
             _spriteBatch.Begin();
 
-            mainMenu.Draw(_spriteBatch);
+            if (playButtonClicked)
+            {
+                theBall.Draw(_spriteBatch);
+                playerPaddleTest.Draw(_spriteBatch);
+                villain.Draw(_spriteBatch);
+                theScoreBoard.Draw(_spriteBatch);
 
-            //theBall.Draw(_spriteBatch);
-            //playerPaddleTest.Draw(_spriteBatch);
-            //villain.Draw(_spriteBatch);
-            //theScoreBoard.Draw(_spriteBatch);
-
-            //if (!gameStart)
-            //{
-            //    Vector2 promptPosition = new Vector2(Globals.PreferredBackBufferWidth / 2 - 300, 20);
-            //    _spriteBatch.DrawString(ScoreBoardFont, "Press 'spacebar' to start the game", promptPosition, Color.White);
-            //}
+                if (!gameStart)
+                {
+                    Vector2 promptPosition = new Vector2(Globals.PreferredBackBufferWidth / 2 - 300, 20);
+                    _spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start the game", promptPosition, Color.White);
+                }
+            } 
+            else
+            {
+                mainMenu.Draw(_spriteBatch);
+            }
 
             _spriteBatch.End();
 
