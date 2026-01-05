@@ -23,13 +23,13 @@ namespace Pong.Entities
 {
     public abstract class Entity
     {
-        public Vector2 Position { get; set; }
-        public Vector2 Speed { get; set; }
+        //public Vector2 Position { get; set; }
+        //public Vector2 Speed { get; set; }
 
         public Entity()
         {
-            Position = Position;
-            Speed = Vector2.Zero;
+            //Position = Position;
+            //Speed = Vector2.Zero;
         }
 
         public abstract void Update(GameTime gameTime);

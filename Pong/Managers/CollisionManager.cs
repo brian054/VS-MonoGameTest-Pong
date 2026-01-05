@@ -19,7 +19,7 @@ namespace Pong.Managers
 {
     public class CollisionManager
     {
-        // The Paddle is separated into 7 zones, tbh this shouldn't be in ball, should be in Collision Manager.
+        // The Paddle is separated into 7 zones
         static readonly Vector2[] ZoneDirsRight = new Vector2[]
         {
             new Vector2(0.5f, -0.87f), // Zone 0: steep up-right
