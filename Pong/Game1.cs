@@ -125,6 +125,9 @@ namespace Pong
             {
                 mainMenu.Update();
 
+                // TODO: Fix this immediately, just make a state manager class, cuz press space on the menu and it breaks 
+                // immediately, of course lol. this is such a horrible way to do it LOL WRITE THE STATE MANAGER well when
+                // you wake up.
                 if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 {
                     gameStart = true;
