@@ -32,6 +32,7 @@ namespace Pong
         private CollisionManager collisionManager;
 
         MainMenuState mainMenu;
+        OptionsMenuState optionsMenu;
 
         MouseState currMouse;
         MouseState prevMouse; // move out to state manager?
@@ -75,6 +76,7 @@ namespace Pong
             Globals.DefaultFont = Content.Load<SpriteFont>("ScoreBoardFont");
 
             mainMenu = new MainMenuState();
+            optionsMenu = new OptionsMenuState();
 
             theBall = new Ball(new Rectangle(_graphics.PreferredBackBufferWidth / 2 - 20, _graphics.PreferredBackBufferHeight / 2 - 20, 20, 20));
             playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), _dummyTexture);
@@ -97,6 +99,10 @@ namespace Pong
             {
                 playButtonClicked = true;
             }
+            // if (optionsMenu.LanguageButton.hoverPlay && currMouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
+            // {
+                
+            // }
 
             if (gameStart)
             {
@@ -145,8 +151,8 @@ namespace Pong
 
                 if (!gameStart)
                 {
-                    Vector2 promptPosition = new Vector2(Globals.PreferredBackBufferWidth / 2 - 300, 20);
-                    _spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start the game", promptPosition, Color.White);
+                    Vector2 promptPosition = new Vector2(40, Globals.PreferredBackBufferHeight - 100);
+                    _spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start!", promptPosition, Color.White);
                 }
             } 
             else

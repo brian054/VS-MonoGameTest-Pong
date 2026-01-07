@@ -18,10 +18,10 @@ namespace Pong.GameStates
 
         private Vector2 TitlePos;
 
-        MouseState mouse;
-        bool hoverPlay;
-        bool hoverOptions;
-        bool hoverRect;
+        // MouseState mouse;
+        // bool hoverPlay;
+        // bool hoverOptions;
+        // bool hoverRect;
 
         public Button PlayButton { get; private set; }
         Button OptionsButton;
@@ -29,14 +29,16 @@ namespace Pong.GameStates
 
         public MainMenuState()
         {
-            int buttonWidth = 180;
+            int buttonWidth = 240;
             int centerX = Globals.PreferredBackBufferWidth / 2 - (buttonWidth / 2);
 
-            TitlePos = new Vector2(centerX, 100);
+            TitlePos = new Vector2(centerX + 50, 100);
 
-            PlayButton = new Button("PLAY", new Vector2(centerX, 250), buttonWidth, Color.RoyalBlue);
-            OptionsButton = new Button("OPTIONS", new Vector2(centerX, 320), buttonWidth, Color.MonoGameOrange);
-            ExitButton = new Button("EXIT", new Vector2(centerX, 390), buttonWidth, Color.BlueViolet);
+            int buttonGroupCenterY = 200;
+
+            PlayButton = new Button("PLAY", new Vector2(centerX, buttonGroupCenterY), buttonWidth, Color.RoyalBlue);
+            OptionsButton = new Button("OPTIONS", new Vector2(centerX, buttonGroupCenterY + 100), buttonWidth, Color.MonoGameOrange);
+            ExitButton = new Button("EXIT", new Vector2(centerX, buttonGroupCenterY + 200), buttonWidth, Color.BlueViolet);
         }
 
         public void Update()

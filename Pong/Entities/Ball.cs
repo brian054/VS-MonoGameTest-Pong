@@ -11,7 +11,9 @@ namespace Pong.Entities
 {
     public class Ball : Entity
     {
-        public Vector2 ballPos { get; set; }
+        public Vector2 ballPos; // { get; set; } had to remove this to set the value in collisionManager, 
+        // this is now a field which gives you direct access to modify the value in collision manager.
+        // Before, like ballVelocity is, this was a property, so you were trying to modify a copy in CM class which didnt work.
         public Vector2 prevPos { get; set; }
         public Vector2 ballVelocity { get; set; } // change back to private later
         public int ballSize { get; private set; }

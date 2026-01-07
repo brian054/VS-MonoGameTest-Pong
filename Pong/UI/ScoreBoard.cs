@@ -21,8 +21,8 @@ namespace Pong.UI
 
         public ScoreBoard()
         {
-            playerScorePos = new Vector2(0, 0);
-            villainScorePos = new Vector2(100, 100);
+            playerScorePos = new Vector2(200, 10);
+            villainScorePos = new Vector2(700, 10);
         }
 
         public void ResetScore()

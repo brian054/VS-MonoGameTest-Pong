@@ -19,18 +19,6 @@ namespace Pong.Managers
 {
     public class CollisionManager
     {
-        // The Paddle is separated into 7 zones
-        static readonly Vector2[] ZoneDirsRight = new Vector2[]
-        {
-            new Vector2(0.5f, -0.87f), // Zone 0: steep up-right
-            new Vector2(0.71f, -0.71f),// Zone 1: medium up-right
-            new Vector2(0.87f, -0.5f), // Zone 2: shallow up-right
-            new Vector2(1.0f, 0.0f),  // Zone 3: flat right
-            new Vector2(0.87f, 0.5f), // Zone 4: shallow down-right
-            new Vector2(0.71f, 0.71f),// Zone 5: medium down-right
-            new Vector2(0.5f, 0.87f) // Zone 6: steep down-right
-        };
-
         public CollisionManager() { }
 
         public void HandleCollisions(Rectangle playerRect, Rectangle villainRect, Ball theBall, ScoreBoard scoreBoard)
@@ -49,78 +37,45 @@ namespace Pong.Managers
             ResolvePaddleCollision(villainRect, theBall);
         }
 
-        // Gotta be a way to clean this up a little
-        public void ResolvePaddleCollision(Rectangle paddle, Ball theBall)
+        public void ResolvePaddleCollision(Rectangle paddle, Ball ball)
         {
-            Rectangle curr = theBall.ballRect;
-            if (!curr.Intersects(paddle)) return;
+            Rectangle ballRect = new Rectangle(
+                (int)MathF.Round(ball.ballPos.X),
+                (int)MathF.Round(ball.ballPos.Y),
+                ball.ballSize,
+                ball.ballSize);
 
-            // the ball's previous position
-            Rectangle prev = new Rectangle((int)theBall.prevPos.X, (int)theBall.prevPos.Y, theBall.ballSize, theBall.ballSize);
-
-            // the last frame, the ball was just above the paddle's top, and currently it's inside the paddle's top.
-            if (prev.Bottom <= paddle.Top && curr.Bottom > paddle.Top)
-            {
-                // so snap it to the top
-                theBall.ballPos = new Vector2(theBall.ballPos.X, paddle.Top - theBall.ballSize);
-                // reflect vertically
-                theBall.ballVelocity = new Vector2(theBall.ballVelocity.X, -theBall.ballVelocity.Y);
+            if (!ballRect.Intersects(paddle))
                 return;
+
+            float ballCenterY = ball.ballPos.Y + ball.ballSize * 0.5f;
+            float t = MathHelper.Clamp((ballCenterY - paddle.Top) / paddle.Height, 0f, 1f);
+
+            // 3 zones instead of freaking 7 
+            float newVy;
+            if (t < 0.33f)      newVy = -0.75f;
+            else if (t < 0.66f) newVy = 0f;
+            else                newVy = 0.75f;
+
+            // float speed = ball.ballVelocity.Length(); not sure if we'll modify speed or not, maybe after a certain rally of hits
+            // if (speed < 0.001f) speed = 1f;
+
+            // Figure out which side we hit based on velocity direction
+            if (ball.ballVelocity.X > 0) // moving right
+            {
+                ball.ballPos.X = paddle.Left - ball.ballSize - 1;
+                ball.ballVelocity = new Vector2(-1f, newVy);
+            }
+            else
+            {
+                ball.ballPos.X = paddle.Right + 1;
+                ball.ballVelocity = new Vector2(1f, newVy);
             }
 
-            // in the previous frame, the ball was just below the paddle's bottom, currently it's inside the paddle's bottom.
-            if (prev.Top >= paddle.Bottom && curr.Top < paddle.Bottom)
-            {
-                // so snap it to the bottom
-                theBall.ballPos = new Vector2(theBall.ballPos.X, paddle.Bottom);
-                // reflect vertically
-                theBall.ballVelocity = new Vector2(theBall.ballVelocity.X, -theBall.ballVelocity.Y);
-                return;
-            }
-
-            // Came from left
-            if (prev.Right <= paddle.Left && curr.Right > paddle.Left)
-            {
-                // snap to left side
-                theBall.ballPos = new Vector2(paddle.Left - theBall.ballSize - 1, theBall.ballPos.Y);
-
-                // figure out which zone it hit
-                float ballCenterY = theBall.ballPos.Y + theBall.ballSize * 0.5f;
-                float t = MathHelper.Clamp((ballCenterY - paddle.Top) / (float)paddle.Height, 0f, 0.9999f);
-                int zone = (int)(t * 7); // 0..6
-
-                // preserve speed
-                float speed = theBall.ballVelocity.Length();
-                if (speed <= 0.0001f) speed = 1f;
-
-                Vector2 dir = ZoneDirsRight[zone];
-                dir.X = -dir.X; // flip it so the ball goes left
-                theBall.ballVelocity = dir * speed;
-
-                return;
-            }
-
-            // Came from right
-            if (prev.Left >= paddle.Right && curr.Left < paddle.Right)
-            {
-                // snap to right side
-                theBall.ballPos = new Vector2(paddle.Right + 1, theBall.ballPos.Y);
-
-                // figure out which zone it hit
-                float ballCenterY = theBall.ballPos.Y + theBall.ballSize * 0.5f;
-                float t = MathHelper.Clamp((ballCenterY - paddle.Top) / (float)paddle.Height, 0f, 0.9999f);
-                int zone = (int)(t * 7); // 0..6
-
-                // preserve speed
-                float speed = theBall.ballVelocity.Length();
-                if (speed <= 0.0001f) speed = 1f;
-
-                Vector2 dir = ZoneDirsRight[zone]; // rightward table
-                theBall.ballVelocity = dir * speed;
-
-                return;
-            }
+            ball.ballVelocity.Normalize();
+           // ball.ballVelocity *= speed;
         }
+
 
         // I'm starting to think about maybe moving this out of this class, having the bool's calculated in Game1.cs, or renaming this EventManager, 
         // where collisions are just included as an Event. 
