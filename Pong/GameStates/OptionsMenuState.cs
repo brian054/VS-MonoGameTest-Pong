@@ -10,7 +10,7 @@ using Pong.UI;
 
 namespace Pong.GameStates
 {
-    internal class OptionsMenuState
+    internal class OptionsMenuState : IGameState
     {
         private SpriteFont OptionsMenuFont; 
 
@@ -30,7 +30,7 @@ namespace Pong.GameStates
             LanguageButton = new Button("LANGUAGE", new Vector2(centerX, 200), buttonWidth, Color.RoyalBlue);
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             LanguageButton.Update();
         }

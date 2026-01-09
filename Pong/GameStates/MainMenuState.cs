@@ -12,7 +12,7 @@ using Pong.UI;
 
 namespace Pong.GameStates
 {
-    internal class MainMenuState
+    internal class MainMenuState : IGameState
     {
         private SpriteFont MainMenuFont; 
 
@@ -41,7 +41,7 @@ namespace Pong.GameStates
             ExitButton = new Button("EXIT", new Vector2(centerX, buttonGroupCenterY + 200), buttonWidth, Color.BlueViolet);
         }
 
-        public void Update()
+        public void Update(GameTime gameTime) // gametime variable orrr??? I mean nothing here is time dependent soooo...TODO...look it up
         {
             PlayButton.Update();
             OptionsButton.Update();

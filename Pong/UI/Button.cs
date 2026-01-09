@@ -11,8 +11,6 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Pong.UI
 {
-    // Why? Well the Main Menu already has 3 buttons, I wanna make it more simple and readable, Options menu 
-    // and game over menu will have buttons, so let's just go ahead and do it.
     internal class Button
     {
         private SpriteFont ButtonFont;
@@ -49,7 +47,6 @@ namespace Pong.UI
             float centerY = ButtonPos.Y + ButtonHeight / 2f;
 
             textPosition = new Vector2(centerX - textSize.X / 2f, centerY - textSize.Y / 2f);
-
         }
 
         public void Update()

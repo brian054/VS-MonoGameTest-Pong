@@ -22,22 +22,23 @@ namespace Pong
         private SpriteBatch _spriteBatch;
         public Texture2D _dummyTexture;
 
-        Paddle playerPaddleTest;
-        Paddle villain;
+        //Paddle playerPaddleTest;
+        //Paddle villain;
 
-        Ball theBall;
+        //Ball theBall;
 
-        ScoreBoard theScoreBoard;
+        //ScoreBoard theScoreBoard;
 
-        private CollisionManager collisionManager;
+        //private CollisionManager collisionManager;
 
-        MainMenuState mainMenu;
-        OptionsMenuState optionsMenu;
+        //MainMenuState mainMenu;
+        //OptionsMenuState optionsMenu;
+        //PongGameState pongGameState;
 
         MouseState currMouse;
         MouseState prevMouse; // move out to state manager?
         bool playButtonClicked = false;
-        bool gameStart = false;
+        //bool gameStart = false;
 
         public Game1()
         {
@@ -75,16 +76,9 @@ namespace Pong
             Globals.dummyTexture.SetData(new[] { Color.White });
             Globals.DefaultFont = Content.Load<SpriteFont>("ScoreBoardFont");
 
-            mainMenu = new MainMenuState();
-            optionsMenu = new OptionsMenuState();
-
-            theBall = new Ball(new Rectangle(_graphics.PreferredBackBufferWidth / 2 - 20, _graphics.PreferredBackBufferHeight / 2 - 20, 20, 20));
-            playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), _dummyTexture);
-            villain = new Paddle(new Rectangle(880, 300, 20, 100), _dummyTexture); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
-
-            theScoreBoard = new ScoreBoard();
-
-            collisionManager = new CollisionManager(); // what's the point if we do nothing in the constructor? just wondering
+            //mainMenu = new MainMenuState();
+            //optionsMenu = new OptionsMenuState();
+            //pongGameState = new PongGameState(_graphics, _dummyTexture);
         }
 
         protected override void Update(GameTime gameTime)
@@ -104,33 +98,28 @@ namespace Pong
                 
             // }
 
-            if (gameStart)
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                playerPaddleTest.Update(gameTime);
-                villain.Update(gameTime);
-                theBall.Update(gameTime);
+                pongGameState.gameStart = false;
+                playButtonClicked = false;
+            }
 
-                collisionManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall, theScoreBoard);
-
-                // Check if someone won the game
-                if (theScoreBoard.playerScore > 2 || theScoreBoard.villainScore > 2)
-                {
-                    // Game over
-                    Debug.WriteLine("Game over!");
-                    theScoreBoard.ResetScore();
-                    gameStart = false;
-                }
+            if (pongGameState.gameStart)
+            {
+                pongGameState.Update(gameTime);
             } 
             else
             {
-                mainMenu.Update();
-
                 // TODO: Fix this immediately, just make a state manager class, cuz press space on the menu and it breaks 
                 // immediately, of course lol. this is such a horrible way to do it LOL WRITE THE STATE MANAGER well when
                 // you wake up.
                 if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 {
-                    gameStart = true;
+                    pongGameState.gameStart = true;
+                } 
+                else
+                {
+                    mainMenu.Update();
                 }
             }
 
@@ -147,16 +136,13 @@ namespace Pong
 
             if (playButtonClicked)
             {
-                theBall.Draw(_spriteBatch);
-                playerPaddleTest.Draw(_spriteBatch);
-                villain.Draw(_spriteBatch);
-                theScoreBoard.Draw(_spriteBatch);
+                pongGameState.Draw(_spriteBatch);
 
-                if (!gameStart)
-                {
-                    Vector2 promptPosition = new Vector2(40, Globals.PreferredBackBufferHeight - 100);
-                    _spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start!", promptPosition, Color.White);
-                }
+                //if (!pongGameState.gameStart)
+                //{
+                //    Vector2 promptPosition = new Vector2(40, Globals.PreferredBackBufferHeight - 100);
+                //    _spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start!", promptPosition, Color.White);
+                //}
             } 
             else
             {
