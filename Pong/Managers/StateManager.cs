@@ -31,24 +31,41 @@ namespace Pong.Managers
         {
             currState = newState;
 
-            switch(currState)
+            //switch(currState)
+            //{
+            //    case GameState.MainMenu:
+            //        currStateObject = mainMenu;
+            //        break;
+            //    case GameState.OptionsMenu:
+            //        currStateObject = mainMenu;
+            //    case GameState.PlayingState:
+            //        currStateObject = mainMenu;
+            //    default:
+            //        currStateObject = mainMenu;
+            //}
+
+            // new type of switch, easier to type lol
+            currStateObject = currState switch
             {
-                case GameState.MainMenu:
-                    break;
-                case GameState.OptionsMenu:
-                    break;
-                case GameState.PlayingState:
-                    break;
-            }
+                GameState.MainMenu => mainMenu,
+                GameState.OptionsMenu => optionsMenu,
+                GameState.PlayingState => pongGameState
+            };
+
         }
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             //switch(currState)
             //{
 
             //}
             //currState.Update();
-            currStateObject.Update();
+            currStateObject?.Update(gameTime); // TODO: do we need the '?'
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            currStateObject?.Draw(spriteBatch);
         }
 
         /*

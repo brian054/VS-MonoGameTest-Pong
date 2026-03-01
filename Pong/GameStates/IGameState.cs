@@ -10,8 +10,8 @@ namespace Pong.GameStates
 {
     public class IGameState
     {
-        void Update(GameTime gameTime) { }
-        void Draw(SpriteBatch spriteBatch) { }
+        public void Update(GameTime gameTime) { }
+        public void Draw(SpriteBatch spriteBatch) { }
         // every state has Update(), and probably will have Draw()
     }
 }
