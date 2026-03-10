@@ -5,6 +5,7 @@ namespace Pong.Shared
 {
     public static class Helpers
     {
+        // TODO: can we remove this?
         public static Texture2D CreateCircleTexture(GraphicsDevice graphicsDevice, int radius)
         {
             int diameter = radius * 2;

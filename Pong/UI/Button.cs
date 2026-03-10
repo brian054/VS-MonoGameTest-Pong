@@ -25,7 +25,7 @@ namespace Pong.UI
         private int ButtonHeight;
 
         MouseState mouse;
-        public bool hoverPlay { get; private set; }
+        public bool IsMouseHovering { get; private set; }
 
         private const float AspectRatio = 3f; // width : height
 
@@ -57,18 +57,18 @@ namespace Pong.UI
 
             if (ButtonRect.Contains(mousePos))
             {
-                hoverPlay = true;
+                IsMouseHovering = true;
             }
             else
             {
-                hoverPlay = false;
+                IsMouseHovering = false;
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Globals.dummyTexture, new Vector2(ButtonRect.X, ButtonRect.Y), ButtonRect, ButtonColor); 
-            if (hoverPlay)
+            if (IsMouseHovering)
             {
                 spriteBatch.Draw(Globals.dummyTexture, new Vector2(ButtonRect.X, ButtonRect.Y), ButtonRect, Color.Black * 0.7f);
             }

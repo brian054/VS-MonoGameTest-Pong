@@ -9,26 +9,25 @@ using Pong.Shared;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Pong.UI;
+using Pong.Managers;
 
 namespace Pong.GameStates
 {
     internal class MainMenuState : IGameState
     {
+        private readonly StateManager stateManager; 
         private SpriteFont MainMenuFont; 
 
         private Vector2 TitlePos;
 
-        // MouseState mouse;
-        // bool hoverPlay;
-        // bool hoverOptions;
-        // bool hoverRect;
+        public Button PlayButton { get; set; }
+        public Button OptionsButton { get; set; }  
+        public Button ExitButton { get; set; }
 
-        public Button PlayButton { get; private set; }
-        Button OptionsButton;
-        Button ExitButton;
-
-        public MainMenuState()
+        public MainMenuState(StateManager sm)
         {
+            stateManager = sm;
+
             int buttonWidth = 240;
             int centerX = Globals.PreferredBackBufferWidth / 2 - (buttonWidth / 2);
 
@@ -46,6 +45,19 @@ namespace Pong.GameStates
             PlayButton.Update();
             OptionsButton.Update();
             ExitButton.Update();
+
+            if (PlayButton.IsMouseHovering && MouseManager.LeftClicked())
+            {
+                stateManager.ChangeState(new PongGameState(stateManager));
+            }
+            else if (OptionsButton.IsMouseHovering && MouseManager.LeftClicked())
+            {
+                stateManager.ChangeState(new OptionsMenuState(stateManager));
+            }
+            else if (ExitButton.IsMouseHovering && MouseManager.LeftClicked())
+            {
+                Environment.Exit(0);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

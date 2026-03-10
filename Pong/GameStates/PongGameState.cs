@@ -12,10 +12,11 @@ namespace Pong.GameStates
 {
     internal class PongGameState : IGameState
     {
+        private readonly StateManager stateManager;
         //private SpriteFont MainMenuFont;
 
         // MouseState mouse;
-        // bool hoverPlay;
+        // bool IsMouseHovering;
         // bool hoverOptions;
         // bool hoverRect;
 
@@ -30,15 +31,17 @@ namespace Pong.GameStates
 
         public bool gameStart = false; // should i do get, set? Idc to know right now lol so TODO
 
-        public PongGameState(GraphicsDeviceManager _graphics, Texture2D _dummyTexture)
+        public PongGameState(StateManager sm)
         {
-            theBall = new Ball(new Rectangle(_graphics.PreferredBackBufferWidth / 2 - 20, _graphics.PreferredBackBufferHeight / 2 - 20, 20, 20));
-            playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), _dummyTexture);
-            villain = new Paddle(new Rectangle(880, 300, 20, 100), _dummyTexture); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
+            stateManager = sm;
+
+            theBall = new Ball(new Rectangle(Globals.PreferredBackBufferWidth / 2 - 20, Globals.PreferredBackBufferHeight / 2 - 20, 20, 20));
+            playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100));
+            villain = new Paddle(new Rectangle(880, 300, 20, 100)); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
 
             theScoreBoard = new ScoreBoard();
 
-            collisionManager = new CollisionManager(); 
+            collisionManager = new CollisionManager();
         }
 
         public void Update(GameTime gameTime)

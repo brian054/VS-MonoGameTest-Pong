@@ -7,31 +7,25 @@ using System.Threading.Tasks;
 
 namespace Pong.Managers
 {
-    // Do we truly need this? Hmmmm
-    // public static class KeyboardManager
-    // {
-    //     private static KeyboardState currentKeyState;
-    //     private static KeyboardState previousKeyState;
+    public static class KeyboardManager
+    {
+        public static KeyboardState CurrentState { get; private set; }
+        public static KeyboardState PreviousState { get; private set; }
 
-    //     public static void Update()
-    //     {
-    //         previousKeyState = currentKeyState;
-    //         currentKeyState = Keyboard.GetState();
-    //     }
+        public static void Update()
+        {
+            PreviousState = CurrentState;
+            CurrentState = Keyboard.GetState();
+        }
 
-    //     public static bool IsKeyPressed(Keys key)
-    //     {
-    //         return currentKeyState.IsKeyDown(key) && !previousKeyState.IsKeyDown(key);
-    //     }
+        public static bool WasKeyPressed(Keys key)
+        {
+            return CurrentState.IsKeyDown(key) && PreviousState.IsKeyUp(key);
+        }
 
-    //     public static bool IsKeyHeld(Keys key)
-    //     {
-    //         return currentKeyState.IsKeyDown(key);
-    //     }
-
-    //     public static bool IsKeyReleased(Keys key)
-    //     {
-    //         return !currentKeyState.IsKeyDown(key) && previousKeyState.IsKeyDown(key);
-    //     }
-    // }
+        public static bool IsKeyDown(Keys key)
+        {
+            return CurrentState.IsKeyDown(key);
+        }
+    }
 }

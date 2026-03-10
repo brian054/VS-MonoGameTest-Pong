@@ -20,7 +20,6 @@ namespace Pong.Entities
         private int paddleSpeed = 500; // pixels per second
 
         // private Vector2 paddleSize; 
-        private Texture2D dummyTexture;
 
         private int windowHeight = Globals.PreferredBackBufferHeight;
 
@@ -32,12 +31,11 @@ namespace Pong.Entities
                 paddleHeight
              );
              
-        public Paddle(Rectangle rect, Texture2D dummyTexture) // todo: remove dummytexture param
+        public Paddle(Rectangle rect)
         {
             paddleWidth = rect.Width;
             paddleHeight = rect.Height;
             paddlePos = new Vector2(rect.X, rect.Y);
-            this.dummyTexture = dummyTexture;
         }
 
         public override void Update(GameTime gameTime)/*GameTime gameTime, KeyboardState keyState)*/

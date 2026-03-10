@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pong.GameStates
 {
-    public class IGameState
+    public interface IGameState
     {
         public void Update(GameTime gameTime) { }
         public void Draw(SpriteBatch spriteBatch) { }

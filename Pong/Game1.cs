@@ -18,9 +18,12 @@ namespace Pong
         Vector2 ballPos; 
         float ballSpeed;
 
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        public Texture2D _dummyTexture;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        public Texture2D dummyTexture;
+
+        private StateManager stateManager;
+        //IGameState currState;
 
         //Paddle playerPaddleTest;
         //Paddle villain;
@@ -42,11 +45,11 @@ namespace Pong
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = Globals.PreferredBackBufferWidth;
-            _graphics.PreferredBackBufferHeight = Globals.PreferredBackBufferHeight;
-            _graphics.SynchronizeWithVerticalRetrace = true;
-            _graphics.ApplyChanges();
+            graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = Globals.PreferredBackBufferWidth;
+            graphics.PreferredBackBufferHeight = Globals.PreferredBackBufferHeight;
+            graphics.SynchronizeWithVerticalRetrace = true;
+            graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -65,12 +68,13 @@ namespace Pong
             base.Initialize();
 
             // game specific initializations
+            
         }
 
         // Called once per game, within the Initialize method, before the main game loop starts
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Globals.dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
             Globals.dummyTexture.SetData(new[] { Color.White });
@@ -78,7 +82,9 @@ namespace Pong
 
             //mainMenu = new MainMenuState();
             //optionsMenu = new OptionsMenuState();
-            //pongGameState = new PongGameState(_graphics, _dummyTexture);
+            //pongGameState = new PongGameState(graphics, dummyTexture);
+            stateManager = new();
+            stateManager.ChangeState(new MainMenuState(stateManager));
         }
 
         protected override void Update(GameTime gameTime)
@@ -86,44 +92,10 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            currMouse = Mouse.GetState();
+            KeyboardManager.Update();
+            MouseManager.Update();
 
-            // test click
-            if (mainMenu.PlayButton.hoverPlay && currMouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
-            {
-                playButtonClicked = true;
-            }
-            // if (optionsMenu.LanguageButton.hoverPlay && currMouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
-            // {
-                
-            // }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                pongGameState.gameStart = false;
-                playButtonClicked = false;
-            }
-
-            if (pongGameState.gameStart)
-            {
-                pongGameState.Update(gameTime);
-            } 
-            else
-            {
-                // TODO: Fix this immediately, just make a state manager class, cuz press space on the menu and it breaks 
-                // immediately, of course lol. this is such a horrible way to do it LOL WRITE THE STATE MANAGER well when
-                // you wake up.
-                if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                {
-                    pongGameState.gameStart = true;
-                } 
-                else
-                {
-                    mainMenu.Update();
-                }
-            }
-
-            prevMouse = currMouse;
+            stateManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -132,24 +104,26 @@ namespace Pong
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin();
+            spriteBatch.Begin();
 
-            if (playButtonClicked)
-            {
-                pongGameState.Draw(_spriteBatch);
+            stateManager.Draw(spriteBatch);
 
-                //if (!pongGameState.gameStart)
-                //{
-                //    Vector2 promptPosition = new Vector2(40, Globals.PreferredBackBufferHeight - 100);
-                //    _spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start!", promptPosition, Color.White);
-                //}
-            } 
-            else
-            {
-                mainMenu.Draw(_spriteBatch);
-            }
+            //if (playButtonClicked)
+            //{
+            //    pongGameState.Draw(spriteBatch);
 
-            _spriteBatch.End();
+            //    //if (!pongGameState.gameStart)
+            //    //{
+            //    //    Vector2 promptPosition = new Vector2(40, Globals.PreferredBackBufferHeight - 100);
+            //    //    spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start!", promptPosition, Color.White);
+            //    //}
+            //} 
+            //else
+            //{
+            //    mainMenu.Draw(spriteBatch);
+            //}
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
