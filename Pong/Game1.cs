@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pong.Entities;
@@ -80,9 +81,12 @@ namespace Pong
             Globals.dummyTexture.SetData(new[] { Color.White });
             Globals.DefaultFont = Content.Load<SpriteFont>("ScoreBoardFont");
 
-            //mainMenu = new MainMenuState();
-            //optionsMenu = new OptionsMenuState();
-            //pongGameState = new PongGameState(graphics, dummyTexture);
+            //soundManager = new SoundManager();
+
+            //soundManager.LoadSound("paddle", Content.Load<SoundEffect>("paddle_hit"));
+            //soundManager.LoadSound("score", Content.Load<SoundEffect>("score"));
+            //soundManager.LoadSound("button", Content.Load<SoundEffect>("button_click"));
+
             stateManager = new();
             stateManager.ChangeState(new MainMenuState(stateManager));
         }
