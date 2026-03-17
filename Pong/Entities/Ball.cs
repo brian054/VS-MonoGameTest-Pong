@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Pong.Shared;
+using System.Diagnostics;
 
 namespace Pong.Entities
 {
@@ -17,8 +18,11 @@ namespace Pong.Entities
         public Vector2 prevPos { get; set; }
         public Vector2 ballVelocity { get; set; } // change back to private later
         public int ballSize { get; private set; }
-        private int ballSpeed = 400; // was 250, pixels per second
+        private int defaultBallSpeed = 400;
+        private int currentBallSpeed = 400; // was 250, pixels per second
                                      // private Texture2D ballTexture;
+
+        public int timesHit = 0; // times the ball is hit in a single round, to track speed increases over a rally
         public Rectangle ballRect =>
             new Rectangle(
                 (int)MathF.Round(ballPos.X), 
@@ -43,16 +47,27 @@ namespace Pong.Entities
             int xDirection = Globals.Random.Next(0, 2) == 0 ? -1 : 1;
             ballVelocity = new Vector2(ballVelocity.X * xDirection, -ballVelocity.Y);
 
+            timesHit = 0;
+            currentBallSpeed = defaultBallSpeed; 
+
             //todo: pick a random y direction
             //todo: have a slight pause.
 
         }
 
+        private int speedTier = 0;
         public override void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             prevPos = ballPos;
-            ballPos += ballVelocity * ballSpeed * dt;
+            ballPos += ballVelocity * currentBallSpeed * dt;
+
+            int newTier = timesHit / 5;
+            if (newTier > speedTier && currentBallSpeed < 1000)
+            {
+                currentBallSpeed += 100;
+                speedTier = newTier;
+            }
         }
         public override void Draw(SpriteBatch spriteBatch)
         {

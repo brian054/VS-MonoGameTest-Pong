@@ -23,7 +23,7 @@ namespace Pong.Managers
 
         public void HandleCollisions(Rectangle playerRect, Rectangle villainRect, Ball theBall, ScoreBoard scoreBoard)
         {
-            HandleScoreUpdate(theBall, scoreBoard);
+            HandleScoreUpdate(theBall, scoreBoard); // why is this in here?
 
             // check ball collision top or bottom of window
             if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.ballSize > Globals.PreferredBackBufferHeight)
@@ -37,6 +37,11 @@ namespace Pong.Managers
             ResolvePaddleCollision(villainRect, theBall);
         }
 
+        /*
+         * TODO: At high speeds sometimes collision behaves strange. Or rather it looks strange. Not
+         * sure how you wanna handle that yet.
+         * 
+         */
         public void ResolvePaddleCollision(Rectangle paddle, Ball ball)
         {
             Rectangle ballRect = new Rectangle(
@@ -73,6 +78,7 @@ namespace Pong.Managers
             }
 
             ball.ballVelocity.Normalize();
+            ball.timesHit += 1;
            // ball.ballVelocity *= speed;
         }
 

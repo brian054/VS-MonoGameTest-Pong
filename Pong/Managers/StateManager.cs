@@ -17,9 +17,9 @@ namespace Pong.Managers
 
        // private IGameState currStateObject; // so i can avoid multiple switch statements
 
-        private MainMenuState mainMenu;
-        private OptionsMenuState optionsMenu;
-        private PongGameState pongGameState;
+        //private MainMenuState mainMenu;
+        //private OptionsMenuState optionsMenu;
+        //private PongGameState pongGameState;
 
         //public StateManager(GraphicsDeviceManager _graphics, Texture2D _dummyTexture) { // TODO: review the params
         //    mainMenu = new MainMenuState();
