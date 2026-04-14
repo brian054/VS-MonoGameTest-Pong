@@ -8,9 +8,7 @@ namespace Pong.Audio
 {
     public static class SoundKeys
     {
-        public const string Paddle = "paddle";
-        public const string Score = "score";
-        public const string Button = "button";
-        public const string Reset = "reset";
+        public const string Paddle1 = "paddle1";
+        public const string Paddle2 = "paddle2";
     }
 }

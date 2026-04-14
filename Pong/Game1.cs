@@ -24,6 +24,7 @@ namespace Pong
         public Texture2D dummyTexture;
 
         private StateManager stateManager;
+        private SoundManager soundManager;
         //IGameState currState;
 
         //Paddle playerPaddleTest;
@@ -81,11 +82,10 @@ namespace Pong
             Globals.dummyTexture.SetData(new[] { Color.White });
             Globals.DefaultFont = Content.Load<SpriteFont>("ScoreBoardFont");
 
-            //soundManager = new SoundManager();
+            soundManager = new SoundManager();
 
-            //soundManager.LoadSound("paddle", Content.Load<SoundEffect>("paddle_hit"));
-            //soundManager.LoadSound("score", Content.Load<SoundEffect>("score"));
-            //soundManager.LoadSound("button", Content.Load<SoundEffect>("button_click"));
+            soundManager.LoadSound("paddle1", Content.Load<SoundEffect>("pongHit1"));
+            soundManager.LoadSound("paddle2", Content.Load<SoundEffect>("pongHit2"));
 
             stateManager = new();
             stateManager.ChangeState(new MainMenuState(stateManager));

@@ -17,7 +17,7 @@ using System.Threading;
 
 namespace Pong.Managers
 {
-    public class CollisionManager
+    public class CollisionManager // Considering renaming this to EventManager, and having collisions just be apart of the events that can occur in the game.
     {
         public CollisionManager() { }
 
@@ -52,6 +52,17 @@ namespace Pong.Managers
 
             if (!ballRect.Intersects(paddle))
                 return;
+
+            // set some bool collision = true? So then we can return true/false instead of doing void in HandleCollisions....wait
+            /*
+             * I feel like we could just rework this code around, the sounds are different when hitting the top and bottom of the screen compared 
+             * to hitting the paddle. So we need to separate this so we know which sound to play. 
+             * 
+             * TODO: Since we need to move a lot of this anyway, maybe change this class to an EventManager, if there could be 100 different collisions I would
+             * say just have a CollisionManager and an EventManager separate, but the collision isn't very much code, so for now I'll just have this be part of
+             * the EventManager class. 
+             * 
+             */
 
             float ballCenterY = ball.ballPos.Y + ball.ballSize * 0.5f;
             float t = MathHelper.Clamp((ballCenterY - paddle.Top) / paddle.Height, 0f, 1f);
