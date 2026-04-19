@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Pong.Audio;
 using Pong.Entities;
 using Pong.GameStates;
 using Pong.Managers;
@@ -34,7 +35,7 @@ namespace Pong
 
         //ScoreBoard theScoreBoard;
 
-        //private CollisionManager collisionManager;
+        //private EventManager eventManager;
 
         //MainMenuState mainMenu;
         //OptionsMenuState optionsMenu;
@@ -84,8 +85,8 @@ namespace Pong
 
             soundManager = new SoundManager();
 
-            soundManager.LoadSound("paddle1", Content.Load<SoundEffect>("pongHit1"));
-            soundManager.LoadSound("paddle2", Content.Load<SoundEffect>("pongHit2"));
+            soundManager.LoadSound(SoundKeys.Paddle1, Content.Load<SoundEffect>("pongHit1"));
+            soundManager.LoadSound(SoundKeys.Paddle2, Content.Load<SoundEffect>("pongHit2"));
 
             stateManager = new();
             stateManager.ChangeState(new MainMenuState(stateManager));
@@ -96,7 +97,7 @@ namespace Pong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            KeyboardManager.Update();
+            //KeyboardManager.Update();
             MouseManager.Update();
 
             stateManager.Update(gameTime);

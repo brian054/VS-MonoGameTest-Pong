@@ -13,15 +13,12 @@ using System.Runtime.CompilerServices;
 using Pong.UI;
 using System.Threading;
 
-// To manage collisions so I can clean up the Game1 and Ball files.
-
 namespace Pong.Managers
 {
-    public class CollisionManager // Considering renaming this to EventManager, and having collisions just be apart of the events that can occur in the game.
+    // Nice to know: The .NET runtime ensures that only one instance of a static class exists for the lifetime of the application domain.
+    public static class EventManager
     {
-        public CollisionManager() { }
-
-        public void HandleCollisions(Rectangle playerRect, Rectangle villainRect, Ball theBall, ScoreBoard scoreBoard)
+        public static void HandleCollisions(Rectangle playerRect, Rectangle villainRect, Ball theBall, ScoreBoard scoreBoard)
         {
             HandleScoreUpdate(theBall, scoreBoard); // why is this in here?
 
@@ -42,7 +39,7 @@ namespace Pong.Managers
          * sure how you wanna handle that yet.
          * 
          */
-        public void ResolvePaddleCollision(Rectangle paddle, Ball ball)
+        public static void ResolvePaddleCollision(Rectangle paddle, Ball ball)
         {
             Rectangle ballRect = new Rectangle(
                 (int)MathF.Round(ball.ballPos.X),
@@ -59,7 +56,7 @@ namespace Pong.Managers
              * to hitting the paddle. So we need to separate this so we know which sound to play. 
              * 
              * TODO: Since we need to move a lot of this anyway, maybe change this class to an EventManager, if there could be 100 different collisions I would
-             * say just have a CollisionManager and an EventManager separate, but the collision isn't very much code, so for now I'll just have this be part of
+             * say just have a EventManager and an EventManager separate, but the collision isn't very much code, so for now I'll just have this be part of
              * the EventManager class. 
              * 
              */
@@ -96,7 +93,7 @@ namespace Pong.Managers
 
         // I'm starting to think about maybe moving this out of this class, having the bool's calculated in Game1.cs, or renaming this EventManager, 
         // where collisions are just included as an Event. 
-        public void HandleScoreUpdate(Ball theBall, ScoreBoard scoreBoard)
+        public static void HandleScoreUpdate(Ball theBall, ScoreBoard scoreBoard)
         {
             bool playerScored = theBall.ballRect.X + theBall.ballSize > Globals.PreferredBackBufferWidth; // pretty sure you can do theBall.ballRect.Right instead of calculating the X plus ballSize
             bool villainScored = theBall.ballRect.X < 0;

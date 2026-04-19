@@ -27,9 +27,7 @@ namespace Pong.GameStates
 
         ScoreBoard theScoreBoard;
 
-        private CollisionManager collisionManager;
-
-        public bool gameStart = false; // should i do get, set? Idc to know right now lol so TODO
+        public bool gameStart = false;
 
         public PongGameState(StateManager sm)
         {
@@ -40,8 +38,6 @@ namespace Pong.GameStates
             villain = new Paddle(new Rectangle(880, 300, 20, 100)); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
 
             theScoreBoard = new ScoreBoard();
-
-            collisionManager = new CollisionManager();
         }
 
         public void Update(GameTime gameTime)
@@ -50,7 +46,7 @@ namespace Pong.GameStates
             villain.Update(gameTime);
             theBall.Update(gameTime);
 
-            collisionManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall, theScoreBoard);
+            EventManager.HandleCollisions(playerPaddleTest.paddleRect, villain.paddleRect, theBall, theScoreBoard);
 
             // Check if someone won the game
             if (theScoreBoard.playerScore > 2 || theScoreBoard.villainScore > 2)

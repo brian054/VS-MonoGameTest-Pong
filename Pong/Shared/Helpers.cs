@@ -31,7 +31,7 @@ namespace Pong.Shared
             return texture;
         }
 
-        // Potentially could move all collisionManager methods into here
+        // Potentially could move all eventManager methods into here
 
         //public static bool IsCircleRectColliding(Vector2 circleCenter, float radius, Rectangle rect)
         //{
