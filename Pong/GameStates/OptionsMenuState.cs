@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Pong.Managers;
+using Pong.Services;
 using Pong.Shared;
 using Pong.UI;
 using System;
@@ -13,8 +14,8 @@ namespace Pong.GameStates
 {
     internal class OptionsMenuState : IGameState
     {
-        private readonly StateManager stateManager;
-        private SpriteFont OptionsMenuFont; 
+        private SpriteFont OptionsMenuFont;
+        private GameServices gameServices;
 
         // MouseState mouse;
         // bool IsMouseHovering;
@@ -24,9 +25,9 @@ namespace Pong.GameStates
         public Button LanguageButton { get; private set; }
         public Button BackButton { get; private set; }
 
-        public OptionsMenuState(StateManager sm)
+        public OptionsMenuState(GameServices services)
         {
-            stateManager = sm;
+            gameServices = services;
 
             int buttonWidth = 240;
             int centerX = Globals.PreferredBackBufferWidth / 2 - (buttonWidth / 2);
@@ -41,7 +42,7 @@ namespace Pong.GameStates
 
             if (BackButton.IsMouseHovering && MouseManager.LeftClicked())
             {
-                stateManager.ChangeState(new MainMenuState(stateManager));
+                gameServices.stateManager.ChangeState(new MainMenuState(gameServices));
             }
         }
 

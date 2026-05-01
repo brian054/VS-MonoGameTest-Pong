@@ -15,13 +15,13 @@
 
 #begin pongHit1.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:pongHit1.mp3
 
 #begin pongHit2.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:pongHit2.mp3
 

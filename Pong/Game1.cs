@@ -6,6 +6,7 @@ using Pong.Audio;
 using Pong.Entities;
 using Pong.GameStates;
 using Pong.Managers;
+using Pong.Services;
 using Pong.Shared;
 using Pong.UI;
 using System;
@@ -24,8 +25,10 @@ namespace Pong
         private SpriteBatch spriteBatch;
         public Texture2D dummyTexture;
 
+        private GameServices gameServices;
         private StateManager stateManager;
         private SoundManager soundManager;
+
         //IGameState currState;
 
         //Paddle playerPaddleTest;
@@ -71,7 +74,6 @@ namespace Pong
             base.Initialize();
 
             // game specific initializations
-            
         }
 
         // Called once per game, within the Initialize method, before the main game loop starts
@@ -83,13 +85,17 @@ namespace Pong
             Globals.dummyTexture.SetData(new[] { Color.White });
             Globals.DefaultFont = Content.Load<SpriteFont>("ScoreBoardFont");
 
-            soundManager = new SoundManager();
-
+            soundManager = new();
             soundManager.LoadSound(SoundKeys.Paddle1, Content.Load<SoundEffect>("pongHit1"));
             soundManager.LoadSound(SoundKeys.Paddle2, Content.Load<SoundEffect>("pongHit2"));
+            
+            gameServices = new();
+            gameServices.soundManager = soundManager;
 
-            stateManager = new();
-            stateManager.ChangeState(new MainMenuState(stateManager));
+            stateManager = new(gameServices);
+            stateManager.ChangeState(new MainMenuState(gameServices));
+            gameServices.stateManager = stateManager;
+
         }
 
         protected override void Update(GameTime gameTime)

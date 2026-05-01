@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Pong.GameStates;
+using Pong.Services;
 
 namespace Pong.Managers
 {
@@ -26,6 +27,11 @@ namespace Pong.Managers
         //    optionsMenu = new OptionsMenuState();
         //    pongGameState = new PongGameState(_graphics, _dummyTexture);
         //}
+
+        public StateManager(GameServices services)
+        {
+
+        }
 
         public void ChangeState(IGameState newState)
         {
