@@ -13,15 +13,13 @@ namespace Pong.Entities
 {
     public class Paddle : Entity
     {
-
         public Vector2 paddlePos;
         public int paddleWidth;
         public int paddleHeight;
         private int paddleSpeed = 500; // pixels per second
 
-        // private Vector2 paddleSize; 
-
-        private int windowHeight = Globals.PreferredBackBufferHeight;
+        private readonly bool isVerticalMovement;
+        private readonly int windowWidth = Globals.PreferredBackBufferWidth;
 
         public Rectangle paddleRect =>
             new Rectangle(
@@ -31,14 +29,33 @@ namespace Pong.Entities
                 paddleHeight
              );
              
-        public Paddle(Rectangle rect)
+        public Paddle(Rectangle rect, bool isVerticalMovement)
         {
             paddleWidth = rect.Width;
             paddleHeight = rect.Height;
             paddlePos = new Vector2(rect.X, rect.Y);
+            this.isVerticalMovement = isVerticalMovement;
+        }
+        
+        // TODO: finish
+        public override void Update(GameTime gameTime)/*GameTime gameTime, KeyboardState keyState)*/
+        {
+            // move out into method
+            if(isVerticalMovement)
+            {
+                UpdateVerticalMovement(gameTime);
+            }
+            else 
+            {
+                UpdateHorizontalMovement(gameTime);
+            }
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Globals.dummyTexture, paddlePos, paddleRect, Color.Red);
         }
 
-        public override void Update(GameTime gameTime)/*GameTime gameTime, KeyboardState keyState)*/
+        private void UpdateVerticalMovement(GameTime gameTime)
         {
             // Movement
             var keyState = Keyboard.GetState();
@@ -53,18 +70,39 @@ namespace Pong.Entities
             }
 
             // Bounds
-            if (paddlePos.Y > windowHeight - paddleRect.Height)
+            if (paddlePos.Y > windowWidth - paddleRect.Height)
             {
-                paddlePos.Y = windowHeight - paddleRect.Height;
+                paddlePos.Y = windowWidth - paddleRect.Height;
             }
             else if (paddlePos.Y < 0)
             {
                 paddlePos.Y = 0;
             }
         }
-        public override void Draw(SpriteBatch spriteBatch)
+
+        private void UpdateHorizontalMovement(GameTime gameTime)
         {
-            spriteBatch.Draw(Globals.dummyTexture, paddlePos, paddleRect, Color.Red);
+            // Movement
+            var keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.A))
+            {
+                paddlePos.X -= paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
+            if (keyState.IsKeyDown(Keys.D))
+            {
+                paddlePos.X += paddleSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
+            // Bounds
+            if (paddlePos.X + paddleRect.Width > windowWidth)
+            {
+                paddlePos.X = windowWidth - paddleRect.Width;
+            }
+            else if (paddlePos.X < 0)
+            {
+                paddlePos.X = 0;
+            }
         }
     }
 }

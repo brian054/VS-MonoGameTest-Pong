@@ -35,8 +35,8 @@ namespace Pong.GameStates
             gameServices = services; 
 
             theBall = new Ball(new Rectangle(Globals.PreferredBackBufferWidth / 2 - 20, Globals.PreferredBackBufferHeight / 2 - 20, 20, 20));
-            playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100));
-            villain = new Paddle(new Rectangle(880, 300, 20, 100)); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
+            playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), true);
+            villain = new Paddle(new Rectangle(880, 300, 20, 100), true); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
 
             theScoreBoard = new ScoreBoard();
         }
