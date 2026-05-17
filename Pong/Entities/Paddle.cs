@@ -55,6 +55,17 @@ namespace Pong.Entities
             spriteBatch.Draw(Globals.dummyTexture, paddlePos, paddleRect, Color.Red);
         }
 
+
+        /*
+            Note: maybe redo all this: Use Strategy pattern if this stuff starts getting messy
+
+            We have more than 2 movement strategies:
+            - vertical 
+            - horizontal
+            - AI movement
+
+            This might be overkill, so for now I'll leave it as is. 
+        */
         private void UpdateVerticalMovement(GameTime gameTime)
         {
             // Movement
