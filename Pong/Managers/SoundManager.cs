@@ -15,7 +15,7 @@ namespace Pong.Managers
      */
     public class SoundManager
     {
-        private Dictionary<string, SoundEffect> _sounds = new();
+        private Dictionary<string, SoundEffect> sounds = new();
 
         public float MasterVolume { get; set; } = 1.0f;
 
@@ -25,15 +25,15 @@ namespace Pong.Managers
 
         public void LoadSound(string key, SoundEffect sound)
         {
-            if (!_sounds.ContainsKey(key))
+            if (!sounds.ContainsKey(key))
             {
-                _sounds.Add(key, sound);
+                sounds.Add(key, sound);
             }
         }
 
         public void Play(string key)
         {
-            if (_sounds.TryGetValue(key, out var sound))
+            if (sounds.TryGetValue(key, out var sound))
             {
                 sound.Play(MasterVolume, 0f, 0f);
             }
@@ -41,7 +41,7 @@ namespace Pong.Managers
 
         public void Play(string key, float volume, float pitch = 0f, float pan = 0f)
         {
-            if (_sounds.TryGetValue(key, out var sound))
+            if (sounds.TryGetValue(key, out var sound))
             {
                 sound.Play(volume * MasterVolume, pitch, pan);
             }

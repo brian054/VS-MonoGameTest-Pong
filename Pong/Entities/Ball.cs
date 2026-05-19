@@ -22,7 +22,14 @@ namespace Pong.Entities
         private int currentBallSpeed = 400; // was 250, pixels per second
                                      // private Texture2D ballTexture;
 
+        // private readonly bool isPong;
+        /*
+            The above just gets messy over time, what if we wanna add a volleyball style game using the same Ball entity, we need to 
+            use Strategy pattern for that? or some other way lets think on this.  
+        */
+
         public int timesHit = 0; // times the ball is hit in a single round, to track speed increases over a rally
+        // need to move timesHit out, pong only cares.
         public Rectangle ballRect =>
             new Rectangle(
                 (int)MathF.Round(ballPos.X), 
@@ -62,6 +69,9 @@ namespace Pong.Entities
             prevPos = ballPos;
             ballPos += ballVelocity * currentBallSpeed * dt;
 
+            // RegisterPongHit() - move this out, the above can stay as it's generic.
+            // method in ball class here yes , nope 
+            // Again this is specific to the pong game....so put this logic in pong state class.
             int newTier = timesHit / 5;
             if (newTier > speedTier && currentBallSpeed < 1000)
             {

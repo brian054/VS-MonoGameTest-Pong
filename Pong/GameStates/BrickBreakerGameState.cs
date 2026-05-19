@@ -1,17 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Pong.Audio;
 using Pong.Entities;
 using Pong.Services;
 using Pong.Shared;
 using Pong.UI;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pong.Shared;
 
 namespace Pong.GameStates
 {
@@ -19,9 +11,17 @@ namespace Pong.GameStates
     {
         private readonly GameServices gameServices;
 
-        Paddle playerPaddleTest;
+        private Paddle playerPaddle;
+        private Ball ball; 
+        private ScoreBoard scoreBoard;
 
-        ScoreBoard theScoreBoard;
+        private Brick[,] bricks;
+
+        private int brickRows = 5;
+        private int brickColumns = 10;
+        private int brickWidth = 70;
+        private int brickHeight = 25;
+        private int brickPadding = 8;
 
         public bool gameStart = false;
 
@@ -29,36 +29,128 @@ namespace Pong.GameStates
         {
             gameServices = services;
 
-            playerPaddleTest = new Paddle(new Rectangle(Globals.PreferredBackBufferWidth / 2, Globals.PreferredBackBufferHeight - 80, 100, 20), false   );
+            playerPaddle = new Paddle(
+                new Rectangle(
+                    Globals.PreferredBackBufferWidth / 2,
+                    Globals.PreferredBackBufferHeight - 80,
+                    100,
+                    20
+                ),
+                false
+            );
 
-            theScoreBoard = new ScoreBoard();
+            ball = new Ball(new Rectangle(
+                    Globals.PreferredBackBufferWidth / 2,
+                    Globals.PreferredBackBufferHeight - 80,
+                    50,
+                    50
+            ));
+
+            scoreBoard = new ScoreBoard();
+
+            InitializeBricks();
         }
 
         public void Update(GameTime gameTime)
         {
-            playerPaddleTest.Update(gameTime);
+            playerPaddle.Update(gameTime);
+            ball.Update(gameTime);
 
-            //// Check if someone won the game
-            //if (theScoreBoard.playerScore > 2)
-            //{
-            //    // Game over
-            //    Debug.WriteLine("Game over!");
-            //    theScoreBoard.ResetScore();
-            //    gameStart = false;
-            //}
+            // UpdateBricks(gameTime);
+            foreach (Brick brick in bricks)
+            {
+                if (brick == null)
+                    continue;
+
+                brick.Update(gameTime);
+            }
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            playerPaddle.Draw(spriteBatch);
+            ball.Draw(spriteBatch);
 
-            playerPaddleTest.Draw(spriteBatch);
-            //theScoreBoard.Draw(spriteBatch);
+            // DrawBricks(spriteBatch);
+            foreach (Brick brick in bricks)
+            {
+                if (brick == null)
+                    continue;
 
-            if (gameStart)
+                brick.Draw(spriteBatch);
+            }
+
+            // scoreBoard.Draw(spriteBatch);
+
+            if (!gameStart)
             {
                 Vector2 promptPosition = new Vector2(40, Globals.PreferredBackBufferHeight - 100);
                 spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start!", promptPosition, Color.White);
             }
+        }
+
+        private void InitializeBricks()
+        {
+            bricks = new Brick[brickRows, brickColumns];
+
+            int totalGridWidth = brickColumns * brickWidth + (brickColumns - 1) * brickPadding;
+            int startX = (Globals.PreferredBackBufferWidth - totalGridWidth) / 2;
+            int startY = 80;
+
+            for (int row = 0; row < brickRows; row++)
+            {
+                for (int column = 0; column < brickColumns; column++)
+                {
+                    int x = startX + column * (brickWidth + brickPadding);
+                    int y = startY + row * (brickHeight + brickPadding);
+
+                    Vector2 brickPosition = new Vector2(x, y);
+                    Color brickColor = GetBrickColor(row);
+
+                    bricks[row, column] = new Brick(
+                        brickPosition,
+                        brickWidth,
+                        brickHeight,
+                        brickColor
+                    );
+                }
+            }
+        }   
+
+        private Color GetBrickColor(int row)
+        {
+            if (row == 0)
+                return new Color(255, 0, 0);
+
+            if (row == 1)
+                return new Color(255, 165, 0);
+
+            if (row == 2)
+                return new Color(255, 255, 0);
+
+            if (row == 3)
+                return new Color(0, 255, 0);
+
+            return new Color(0, 128, 255);
+        }
+
+        private void CheckBrickCollisions()
+        {
+            // Later when the ball exists:
+            //
+            // foreach (Brick brick in bricks)
+            // {
+            //     if (brick == null || brick.IsDestroyed)
+            //         continue;
+            //
+            //     if (ball.Rectangle.Intersects(brick.Rectangle))
+            //     {
+            //         brick.TakeHit();
+            //         ball.Bounce();
+            //         break;
+            //     }
+            // }
         }
     }
 }
