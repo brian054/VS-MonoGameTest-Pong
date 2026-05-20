@@ -28,7 +28,7 @@ namespace Pong.Entities
             use Strategy pattern for that? or some other way lets think on this.  
         */
 
-        public int timesHit = 0; // times the ball is hit in a single round, to track speed increases over a rally
+        
         // need to move timesHit out, pong only cares.
         public Rectangle ballRect =>
             new Rectangle(

@@ -10,6 +10,8 @@ using Pong.UI;
 using System;
 using System.Diagnostics;
 
+// TODO tomorrow: move pong logic out of Ball.cs, continue refactoring. 
+
 namespace Pong.GameStates
 {
     internal class PongGameState : IGameState
@@ -29,6 +31,8 @@ namespace Pong.GameStates
         ScoreBoard theScoreBoard;
 
         public bool gameStart = false;
+
+        public int timesHit = 0; // times the ball is hit in a single round, to track speed increases over a rally
 
         public PongGameState(GameServices services)
         {
@@ -146,6 +150,21 @@ namespace Pong.GameStates
 
                 theBall.Reset();
             }
+        }
+
+        public void Reset() // -1 = left, +1 = right
+        {
+            theBall.ballPos = new Vector2(Globals.PreferredBackBufferWidth / 2 - 20, Globals.PreferredBackBufferHeight / 2 - 20);
+
+            int xDirection = Globals.Random.Next(0, 2) == 0 ? -1 : 1;
+            theBall.ballVelocity = new Vector2(theBall.ballVelocity.X * xDirection, -theBall.ballVelocity.Y);
+
+            timesHit = 0;
+            currentBallSpeed = defaultBallSpeed;
+
+            //todo: pick a random y direction
+            //todo: have a slight pause.
+
         }
     }
 }
