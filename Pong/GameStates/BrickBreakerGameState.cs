@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Pong.Entities;
 using Pong.Services;
 using Pong.Shared;
@@ -23,7 +24,9 @@ namespace Pong.GameStates
         private int brickHeight = 25;
         private int brickPadding = 8;
 
-        public bool gameStart = false;
+        private int defaultBallSpeed = 200;
+
+        public bool gameStart = false; // static or no? probably...
 
         public BrickBreakerGameState(GameServices services)
         {
@@ -39,8 +42,8 @@ namespace Pong.GameStates
                 false
             );
 
-            Rectangle ballRect = new Rectangle(Globals.PreferredBackBufferWidth / 2, Globals.PreferredBackBufferHeight - 80, 50, 50);
-            ball = new Ball(ballRect, new Vector2(1, -1), 4);
+            Rectangle ballRect = new Rectangle(Globals.PreferredBackBufferWidth / 2, Globals.PreferredBackBufferHeight - 300, 10, 10);
+            ball = new Ball(ballRect, new Vector2(0.2f, 1), defaultBallSpeed);
 
             scoreBoard = new ScoreBoard();
 
@@ -49,16 +52,29 @@ namespace Pong.GameStates
 
         public void Update(GameTime gameTime)
         {
-            playerPaddle.Update(gameTime);
-            ball.Update(gameTime);
-
-            // UpdateBricks(gameTime);
-            foreach (Brick brick in bricks)
+            if (gameStart)
             {
-                if (brick == null)
-                    continue;
+                playerPaddle.Update(gameTime);
+                ball.Update(gameTime); 
+                HandlePaddleBallCollision();
+                CheckBrickCollisions();
+                CheckWallCollisions();
 
-                brick.Update(gameTime);
+                // UpdateBricks(gameTime);
+                foreach (Brick brick in bricks)
+                {
+                    if (brick == null)
+                        continue;
+
+                    brick.Update(gameTime);
+                }
+            }
+            else
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    gameStart = true;
+                }
             }
 
         }
@@ -131,22 +147,50 @@ namespace Pong.GameStates
             return new Color(0, 128, 255);
         }
 
+        private void HandlePaddleBallCollision()
+        {
+            if (!ball.ballRect.Intersects(playerPaddle.paddleRect))
+                return;
+
+            float ballCenterX = ball.Position.X + ball.Size * 0.5f;
+            float t = MathHelper.Clamp(
+                (ballCenterX - playerPaddle.paddleRect.Left) / playerPaddle.paddleRect.Width,
+                0f,
+                1f
+            );
+            float newVx = Helpers.GetBounceOffsetFromZones(t, 5, 1.25f); // maxOffset = how extreme the bounce angle can get
+
+            ball.SetDirection(new Vector2(newVx, -1f));
+        }
+
         private void CheckBrickCollisions()
         {
-            // Later when the ball exists:
-            //
-            // foreach (Brick brick in bricks)
-            // {
-            //     if (brick == null || brick.IsDestroyed)
-            //         continue;
-            //
-            //     if (ball.Rectangle.Intersects(brick.Rectangle))
-            //     {
-            //         brick.TakeHit();
-            //         ball.Bounce();
-            //         break;
-            //     }
-            // }
+            // TODO: add zones for xDir influence for these too? Research
+            foreach (Brick brick in bricks)
+            {
+                if (brick == null || brick.IsDestroyed)
+                    continue;
+            
+                if (ball.ballRect.Intersects(brick.Bounds)) // TODO: maybe rename ballRect to either Rect, or Bounds, : winner = _______
+                {
+                    brick.TakeHit();
+                    ball.SetDirection(new Vector2(ball.Direction.X, ball.Direction.Y * -1));
+                    break;
+                }
+            }
+        }
+
+        private void CheckWallCollisions()
+        {
+            // only care about up left and right
+            if (ball.ballRect.Y < 0)
+            {
+                ball.ReverseY();
+            }
+            if (ball.ballRect.X < 0 || ball.ballRect.X > Globals.PreferredBackBufferWidth - ball.Size)
+            {
+                ball.ReverseX();
+            }
         }
     }
 }

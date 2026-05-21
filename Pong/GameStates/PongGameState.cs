@@ -11,8 +11,6 @@ using System;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 
-// TODO tomorrow: move pong logic out of Ball.cs, continue refactoring. 
-
 namespace Pong.GameStates
 {
     internal class PongGameState : IGameState
@@ -28,7 +26,7 @@ namespace Pong.GameStates
         Paddle villain;
 
         Ball theBall;
-        int defaultBallSpeed = 400;
+        private int defaultBallSpeed = 400;
 
         ScoreBoard theScoreBoard;
 
@@ -53,23 +51,32 @@ namespace Pong.GameStates
 
         public void Update(GameTime gameTime)
         {
-            playerPaddleTest.Update(gameTime);
-            villain.Update(gameTime);
-            theBall.Update(gameTime);
-            RegisterPongHit();
+            if (gameStart)
+            {    
+                playerPaddleTest.Update(gameTime);
+                villain.Update(gameTime);
+                theBall.Update(gameTime);
+                RegisterPongHit();
 
-            HandleScoreUpdate();
-            HandleCollisions();
-            ResolvePaddleCollision();
-            ResolvePaddleCollision();
+                HandleScoreUpdate();
+                ResolveTopBottomCollisionWindow();
+                ResolvePaddleBallCollision();
 
-            // Check if someone won the game
-            if (theScoreBoard.playerScore > 2 || theScoreBoard.villainScore > 2)
+                // Check if someone won the game
+                if (theScoreBoard.playerScore > 2 || theScoreBoard.villainScore > 2)
+                {
+                    // Game over
+                    Debug.WriteLine("Game over!");
+                    theScoreBoard.ResetScore();
+                    gameStart = false; 
+                }
+            } 
+            else
             {
-                // Game over
-                Debug.WriteLine("Game over!");
-                theScoreBoard.ResetScore();
-                gameStart = false; 
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    gameStart = true;
+                }
             }
         }
 
@@ -80,14 +87,14 @@ namespace Pong.GameStates
             villain.Draw(spriteBatch);
             theScoreBoard.Draw(spriteBatch);
 
-            if (gameStart)
+            if (!gameStart)
             {
                 Vector2 promptPosition = new Vector2(40, Globals.PreferredBackBufferHeight - 100);
                 spriteBatch.DrawString(Globals.DefaultFont, "Press 'spacebar' to start!", promptPosition, Color.White);
             }
         }
 
-        private int speedTier = 0; // this prolly wont work...you'll have to reset it somewher 
+        private int speedTier = 0; // TODO: test this
         private void RegisterPongHit()
         {
             int newTier = timesHit / 5;
@@ -98,7 +105,7 @@ namespace Pong.GameStates
             }
         }
 
-        private void HandleCollisions()
+        private void ResolveTopBottomCollisionWindow()
         {
             // check ball collision top or bottom of window
             if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.Size > Globals.PreferredBackBufferHeight)
@@ -107,9 +114,9 @@ namespace Pong.GameStates
             }
         }
 
-        private void ResolvePaddleCollision()
+        private void ResolvePaddleBallCollision()
         {
-            Rectangle ballRect = new Rectangle(
+            Rectangle ballRect = new Rectangle( // TODO: pretty sure i can remove this, just do theBall.ballRect
                 (int)MathF.Round(theBall.Position.X),
                 (int)MathF.Round(theBall.Position.Y),
                 theBall.Size,
@@ -122,10 +129,11 @@ namespace Pong.GameStates
             float t = MathHelper.Clamp((ballCenterY - playerPaddleTest.paddleRect.Top) / playerPaddleTest.paddleRect.Height, 0f, 1f);
 
             // 3 zones instead of freaking 7 
-            float newVy;
-            if (t < 0.33f) newVy = -0.75f;
-            else if (t < 0.66f) newVy = 0f;
-            else newVy = 0.75f;
+            float newVy = Helpers.GetBounceOffsetFromZones(t, 3, 0.75f); // 3 zones, 0.75 = max offest
+            // if (t < 0.33f) newVy = -0.75f;
+            // else if (t < 0.66f) newVy = 0f;
+            // else newVy = 0.75f;
+
 
             // float speed = ball.ballVelocity.Length(); not sure if we'll modify speed or not, maybe after a certain rally of hits
             // if (speed < 0.001f) speed = 1f;
@@ -136,8 +144,6 @@ namespace Pong.GameStates
                 gameServices.soundManager.Play(SoundKeys.Paddle1);
                 theBall.SetPosition(new Vector2(villain.paddleRect.Left - theBall.Size - 1, theBall.Position.Y));
                 theBall.SetDirection(new Vector2(-1f, newVy));
-                //theBall.Position.X = villain.paddleRect.Left - theBall.Size - 1;
-                //theBall.ballVelocity = new Vector2(-1f, newVy);
             }
             else
             {
@@ -146,7 +152,7 @@ namespace Pong.GameStates
                 theBall.SetDirection(new Vector2(1f, newVy));
             }
 
-            theBall.Direction.Normalize();
+          //  theBall.Direction.Normalize();
             timesHit += 1;
             // ball.ballVelocity *= speed;
         }

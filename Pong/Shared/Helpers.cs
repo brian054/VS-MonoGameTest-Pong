@@ -31,6 +31,24 @@ namespace Pong.Shared
             return texture;
         }
 
+        // To generalize the ball and paddle collision zones code to determine Ball direction angle.
+        public static float GetBounceOffsetFromZones(float t, int zoneCount, float maxOffset)
+        {
+            if (zoneCount <= 1)
+                return 0f;
+
+            t = MathHelper.Clamp(t, 0f, 1f);
+
+            int zone = (int)(t * zoneCount);
+
+            if (zone >= zoneCount)
+                zone = zoneCount - 1;
+
+            float normalizedZone = zone / (float)(zoneCount - 1);
+
+            return MathHelper.Lerp(-maxOffset, maxOffset, normalizedZone);
+        }
+
         // Potentially could move all eventManager methods into here
 
         //public static bool IsCircleRectColliding(Vector2 circleCenter, float radius, Rectangle rect)

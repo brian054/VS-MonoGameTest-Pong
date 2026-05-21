@@ -16,8 +16,7 @@ namespace Pong.Entities
         private Vector2 PrevPos { get; set; }
         public Vector2 Direction { get; private set; }
         public int Size { get; private set; }
-        public int CurrSpeed { get; private set; }  // was 250, pixels per second
-                                     // private Texture2D ballTexture;
+        public int CurrSpeed { get; private set; }  
 
         // private readonly bool isPong;
         /*
@@ -25,9 +24,10 @@ namespace Pong.Entities
             use Strategy pattern for that? or some other way lets think on this.  
         */
 
+        // TODO: consider this, access and such get; set;??? 
         public Rectangle ballRect =>
             new Rectangle(
-                (int)MathF.Round(Position.X), 
+                (int)MathF.Round(Position.X), // can this casting mess things up: TODO: Research
                 (int)MathF.Round(Position.Y),
                 Size,
                 Size
@@ -80,7 +80,9 @@ namespace Pong.Entities
 
         public void SetDirection(Vector2 dir)
         {
-            Direction = dir;
+            if (dir == Vector2.Zero) return;
+
+            Direction = Vector2.Normalize(dir);
         }
 
         public void ReverseX()
@@ -92,7 +94,5 @@ namespace Pong.Entities
         {
             Direction = new Vector2(Direction.X, -Direction.Y);
         }
-
-
     }
 }
