@@ -12,14 +12,11 @@ namespace Pong.Entities
 {
     public class Ball : Entity
     {
-        public Vector2 ballPos; // { get; set; } had to remove this to set the value in eventManager, 
-        // this is now a field which gives you direct access to modify the value in collision manager.
-        // Before, like ballVelocity is, this was a property, so you were trying to modify a copy in CM class which didnt work.
-        public Vector2 prevPos { get; set; }
-        public Vector2 ballVelocity { get; set; } // change back to private later
-        public int ballSize { get; private set; }
-        private int defaultBallSpeed = 400;
-        private int currentBallSpeed = 400; // was 250, pixels per second
+        public Vector2 Position { get; private set; } 
+        private Vector2 PrevPos { get; set; }
+        public Vector2 Direction { get; private set; }
+        public int Size { get; private set; }
+        public int CurrSpeed { get; private set; }  // was 250, pixels per second
                                      // private Texture2D ballTexture;
 
         // private readonly bool isPong;
@@ -28,60 +25,74 @@ namespace Pong.Entities
             use Strategy pattern for that? or some other way lets think on this.  
         */
 
-        
-        // need to move timesHit out, pong only cares.
         public Rectangle ballRect =>
             new Rectangle(
-                (int)MathF.Round(ballPos.X), 
-                (int)MathF.Round(ballPos.Y),
-                ballSize,
-                ballSize
+                (int)MathF.Round(Position.X), 
+                (int)MathF.Round(Position.Y),
+                Size,
+                Size
              );
 
-        public Ball(Rectangle rect)
+        public Ball(Rectangle rect, Vector2 dir, int speed)
         {
-           ballPos = new Vector2(rect.X, rect.Y);
-           prevPos = ballPos;
-           ballSize = rect.Width; 
+           Position = new Vector2(rect.X, rect.Y);
+           PrevPos = Position;
+           Size = rect.Width; 
  
-           ballVelocity = Vector2.Normalize(new Vector2(1f, -1f)); // the direction
+           Direction = dir; 
+
+           CurrSpeed = speed;
         }
 
-        public void Reset() // -1 = left, +1 = right
+        public void Reset(Vector2 position, Vector2 direction, int speed)
         {
-            ballPos = new Vector2(Globals.PreferredBackBufferWidth / 2 - 20, Globals.PreferredBackBufferHeight / 2 - 20);
+            Position = position;
 
-            int xDirection = Globals.Random.Next(0, 2) == 0 ? -1 : 1;
-            ballVelocity = new Vector2(ballVelocity.X * xDirection, -ballVelocity.Y);
+            if (direction != Vector2.Zero)
+            {
+                direction.Normalize();
+            }
 
-            timesHit = 0;
-            currentBallSpeed = defaultBallSpeed; 
-
-            //todo: pick a random y direction
-            //todo: have a slight pause.
-
+            Direction = direction;
+            CurrSpeed = speed;
         }
 
-        private int speedTier = 0;
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime) 
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            prevPos = ballPos;
-            ballPos += ballVelocity * currentBallSpeed * dt;
-
-            // RegisterPongHit() - move this out, the above can stay as it's generic.
-            // method in ball class here yes , nope 
-            // Again this is specific to the pong game....so put this logic in pong state class.
-            int newTier = timesHit / 5;
-            if (newTier > speedTier && currentBallSpeed < 1000)
-            {
-                currentBallSpeed += 100;
-                speedTier = newTier;
-            }
+            PrevPos = Position;
+            Position += Direction * CurrSpeed * dt;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Globals.dummyTexture, ballPos, ballRect, Color.White);
+            spriteBatch.Draw(Globals.dummyTexture, Position, ballRect, Color.White);
         }
+
+        public void SetPosition(Vector2 position)
+        {
+            Position = position;
+        }
+
+        public void SetSpeed(int speed)
+        {
+            CurrSpeed = speed;
+        }
+
+        public void SetDirection(Vector2 dir)
+        {
+            Direction = dir;
+        }
+
+        public void ReverseX()
+        {
+            Direction = new Vector2(-Direction.X, Direction.Y);
+        }
+
+        public void ReverseY()
+        {
+            Direction = new Vector2(Direction.X, -Direction.Y);
+        }
+
+
     }
 }

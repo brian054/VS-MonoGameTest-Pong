@@ -39,12 +39,8 @@ namespace Pong.GameStates
                 false
             );
 
-            ball = new Ball(new Rectangle(
-                    Globals.PreferredBackBufferWidth / 2,
-                    Globals.PreferredBackBufferHeight - 80,
-                    50,
-                    50
-            ));
+            Rectangle ballRect = new Rectangle(Globals.PreferredBackBufferWidth / 2, Globals.PreferredBackBufferHeight - 80, 50, 50);
+            ball = new Ball(ballRect, new Vector2(1, -1), 4);
 
             scoreBoard = new ScoreBoard();
 

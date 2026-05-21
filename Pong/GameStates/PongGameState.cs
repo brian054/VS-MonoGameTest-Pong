@@ -9,6 +9,7 @@ using Pong.Shared;
 using Pong.UI;
 using System;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 // TODO tomorrow: move pong logic out of Ball.cs, continue refactoring. 
 
@@ -27,8 +28,12 @@ namespace Pong.GameStates
         Paddle villain;
 
         Ball theBall;
+        int defaultBallSpeed = 400;
 
         ScoreBoard theScoreBoard;
+
+        // static because this belongs to the class, no matter if theres one Ball or 10 million. 
+        private static readonly Vector2 startPosition = new Vector2(Globals.PreferredBackBufferWidth / 2 - 20, Globals.PreferredBackBufferHeight / 2 - 20);
 
         public bool gameStart = false;
 
@@ -38,7 +43,8 @@ namespace Pong.GameStates
         {
             gameServices = services; 
 
-            theBall = new Ball(new Rectangle(Globals.PreferredBackBufferWidth / 2 - 20, Globals.PreferredBackBufferHeight / 2 - 20, 20, 20));
+            Rectangle ballRect = new Rectangle((int)startPosition.X, (int)startPosition.Y, 20, 20);
+            theBall = new Ball(ballRect, Vector2.Normalize(new Vector2(1f, -1f)), defaultBallSpeed);
             playerPaddleTest = new Paddle(new Rectangle(60, 100, 20, 100), true);
             villain = new Paddle(new Rectangle(880, 300, 20, 100), true); // 880 = PreferredWidth - 60 (player is x = 60, so offset) - 20 (size)
 
@@ -50,6 +56,7 @@ namespace Pong.GameStates
             playerPaddleTest.Update(gameTime);
             villain.Update(gameTime);
             theBall.Update(gameTime);
+            RegisterPongHit();
 
             HandleScoreUpdate();
             HandleCollisions();
@@ -80,27 +87,38 @@ namespace Pong.GameStates
             }
         }
 
+        private int speedTier = 0; // this prolly wont work...you'll have to reset it somewher 
+        private void RegisterPongHit()
+        {
+            int newTier = timesHit / 5;
+            if (newTier > speedTier && theBall.CurrSpeed < 1000)
+            {
+                theBall.SetSpeed(theBall.CurrSpeed + 100);
+                speedTier = newTier;
+            }
+        }
+
         private void HandleCollisions()
         {
             // check ball collision top or bottom of window
-            if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.ballSize > Globals.PreferredBackBufferHeight)
+            if (theBall.ballRect.Y < 0 || theBall.ballRect.Y + theBall.Size > Globals.PreferredBackBufferHeight)
             {
-                theBall.ballVelocity = new Vector2(theBall.ballVelocity.X, -theBall.ballVelocity.Y);
+                theBall.ReverseY();
             }
         }
 
         private void ResolvePaddleCollision()
         {
             Rectangle ballRect = new Rectangle(
-                (int)MathF.Round(theBall.ballPos.X),
-                (int)MathF.Round(theBall.ballPos.Y),
-                theBall.ballSize,
-                theBall.ballSize);
+                (int)MathF.Round(theBall.Position.X),
+                (int)MathF.Round(theBall.Position.Y),
+                theBall.Size,
+                theBall.Size);
 
             if (!ballRect.Intersects(playerPaddleTest.paddleRect) && !ballRect.Intersects(villain.paddleRect))
                 return;
 
-            float ballCenterY = theBall.ballPos.Y + theBall.ballSize * 0.5f;
+            float ballCenterY = theBall.Position.Y + theBall.Size * 0.5f;
             float t = MathHelper.Clamp((ballCenterY - playerPaddleTest.paddleRect.Top) / playerPaddleTest.paddleRect.Height, 0f, 1f);
 
             // 3 zones instead of freaking 7 
@@ -113,27 +131,29 @@ namespace Pong.GameStates
             // if (speed < 0.001f) speed = 1f;
 
             // Figure out which side we hit based on velocity direction
-            if (theBall.ballVelocity.X > 0) // moving right
+            if (theBall.Direction.X > 0) // moving right
             {
                 gameServices.soundManager.Play(SoundKeys.Paddle1);
-                theBall.ballPos.X = villain.paddleRect.Left - theBall.ballSize - 1;
-                theBall.ballVelocity = new Vector2(-1f, newVy);
+                theBall.SetPosition(new Vector2(villain.paddleRect.Left - theBall.Size - 1, theBall.Position.Y));
+                theBall.SetDirection(new Vector2(-1f, newVy));
+                //theBall.Position.X = villain.paddleRect.Left - theBall.Size - 1;
+                //theBall.ballVelocity = new Vector2(-1f, newVy);
             }
             else
             {
                 gameServices.soundManager.Play(SoundKeys.Paddle2);
-                theBall.ballPos.X = playerPaddleTest.paddleRect.Right + 1;
-                theBall.ballVelocity = new Vector2(1f, newVy);
+                theBall.SetPosition(new Vector2(playerPaddleTest.paddleRect.Right + 1, theBall.Position.Y));
+                theBall.SetDirection(new Vector2(1f, newVy));
             }
 
-            theBall.ballVelocity.Normalize();
-            theBall.timesHit += 1;
+            theBall.Direction.Normalize();
+            timesHit += 1;
             // ball.ballVelocity *= speed;
         }
 
         private void HandleScoreUpdate()
         {
-            bool playerScored = theBall.ballRect.X + theBall.ballSize > Globals.PreferredBackBufferWidth; // pretty sure you can do theBall.ballRect.Right instead of calculating the X plus ballSize
+            bool playerScored = theBall.ballRect.X + theBall.Size > Globals.PreferredBackBufferWidth; // pretty sure you can do theBall.ballRect.Right instead of calculating the X plus ballSize
             bool villainScored = theBall.ballRect.X < 0;
 
             // Update score if ball goes outside the boundary 
@@ -148,19 +168,19 @@ namespace Pong.GameStates
                     theScoreBoard.villainScore += 1;
                 }
 
-                theBall.Reset();
+                ResetBall();
             }
         }
 
-        public void Reset() // -1 = left, +1 = right
+        public void ResetBall() // -1 = left, +1 = right
         {
-            theBall.ballPos = new Vector2(Globals.PreferredBackBufferWidth / 2 - 20, Globals.PreferredBackBufferHeight / 2 - 20);
+            timesHit = 0;
 
             int xDirection = Globals.Random.Next(0, 2) == 0 ? -1 : 1;
-            theBall.ballVelocity = new Vector2(theBall.ballVelocity.X * xDirection, -theBall.ballVelocity.Y);
+            Vector2 serveDirection = new(xDirection, -1);
 
-            timesHit = 0;
-            currentBallSpeed = defaultBallSpeed;
+            theBall.Reset(startPosition, serveDirection, defaultBallSpeed);
+
 
             //todo: pick a random y direction
             //todo: have a slight pause.
